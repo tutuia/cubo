@@ -1,0 +1,144 @@
+#include <Servo.h>
+
+// servos para manipulação do cubo
+Servo servo_F;
+Servo servo_L;
+Servo servo_B;
+Servo servo_R;
+
+//servos de posição
+Servo servoPos_F;
+Servo servoPos_L;
+Servo servoPos_B;
+Servo servoPos_R;
+
+int pos = 0;
+
+void setup(){
+
+  delay(2000);
+  
+  servoPos_F.attach(8);
+  servoPos_L.attach(9);
+  servoPos_B.attach(10);
+  servoPos_R.attach(11);
+
+  servo_F.attach(2);
+  servo_L.attach(3);
+  servo_B.attach(4);
+  servo_R.attach(5);
+
+  servo_F.write(0);
+  servo_L.write(0);
+  servo_B.write(0);
+  servo_R.write(0);
+ 
+  recebe_cubo();
+  circulo();
+  solta_cubo();
+
+}
+
+void move_front(int pos_up, int pos_down){
+
+  servo_F.write(pos_up);
+  delay(1000);
+  servoPos_F.write(pos_down);
+  delay(1000);
+
+  if(pos_up =! 0){
+    move_front(0,90);
+  }
+ }
+
+ void move_rigth(int pos_up, int pos_down){
+
+  servo_L.write(pos_up);
+  delay(1000);
+  servoPos_L.write(pos_down);
+  delay(1000);
+
+  if(pos_up =! 0){
+    move_rigth(0,90);
+  }
+ }
+
+ void move_back(int pos_up, int pos_down){
+
+  servo_B.write(pos_up);
+  delay(1000);
+  servoPos_B.write(pos_down);
+  delay(1000);
+
+  if(pos_up =! 0){
+    move_back(0,90);
+  }
+ }
+
+ 
+ void move_left(int pos_up, int pos_down){
+
+  servo_R.write(pos_up);
+  delay(1000);
+  servoPos_R.write(pos_down);
+  delay(1000);
+
+  if(pos_up =! 0){
+    move_left(0,90);
+  }
+ }
+
+void circulo(){
+
+  move_front(90,0);
+  //delay(100);
+  move_rigth(90,0);
+  //delay(100);
+  move_back(90,0);
+  //delay(100);
+  move_left(90,0);
+  //delay(100);
+  
+  }
+
+void recebe_cubo(){
+  
+  /*Posição para receber o cubo
+   * servos de posição: frente e esquerda no zero, direita e fundo no 90
+   */
+  pos = 0;
+  servoPos_F.write(pos);
+  servoPos_L.write(pos);
+  delay(2000);
+  
+  servoPos_B.write(pos);
+  servoPos_R.write(pos);
+  delay(2000);
+  
+  pos = 90;
+  servoPos_B.write(pos);
+  servoPos_R.write(pos);
+  delay(4000);
+
+  //segura o cubo
+  servoPos_F.write(pos);
+  servoPos_L.write(pos);
+  delay(2000);
+}
+
+void solta_cubo(){
+  pos = 0;
+  
+  servoPos_F.write(pos);
+  servoPos_L.write(pos);
+  delay(2000);
+  
+  servoPos_B.write(pos);
+  servoPos_R.write(pos);
+  delay(2000);
+    
+  }
+
+void loop(){
+  
+}
