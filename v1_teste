@@ -1,0 +1,137 @@
+#include <Servo.h>
+
+// servos para manipulação do cubo
+Servo servo_F;
+Servo servo_L;
+Servo servo_B;
+Servo servo_R;
+
+//servos de posição
+Servo servoPos_F;
+Servo servoPos_L;
+Servo servoPos_B;
+Servo servoPos_R;
+
+int pos = 0;
+
+void setup(){
+
+  delay(2000);
+  
+  servoPos_F.attach(8);
+  servoPos_L.attach(9);
+  servoPos_B.attach(10);
+  servoPos_R.attach(11);
+
+  servo_F.attach(2);
+  servo_L.attach(3);
+  servo_B.attach(4);
+  servo_R.attach(5);
+
+  servo_F.write(0);
+  servo_L.write(0);
+  servo_B.write(0);
+  servo_R.write(0);
+ 
+
+  /*
+  
+  servo_F.attach(2);
+  servo_F.write(pos);
+  delay(2000);
+  
+  servo_L.attach(3);
+  servo_L.write(pos);
+  delay(2000);
+  
+  servo_B.attach(4);
+  servo_B.write(pos);
+  delay(2000);
+  */
+  
+  recebe_cubo();
+  circulo();
+  solta_cubo();
+
+}
+
+void circulo(){
+
+  servo_F.write(90);
+  delay(1000);
+  servoPos_F.write(0);
+  delay(1000);
+  servo_F.write(0);
+  delay(1000);
+  servoPos_F.write(90);
+  delay(1000);
+
+  servo_L.write(90);
+  delay(1000);
+  servoPos_L.write(0);
+  delay(1000);
+  servo_L.write(0);
+  delay(1000);
+  servoPos_L.write(90);
+  delay(1000);
+
+  servo_B.write(90);
+  delay(1000);
+  servoPos_B.write(0);
+  delay(1000);
+  servo_B.write(0);
+  delay(1000);
+  servoPos_B.write(90);
+  delay(1000);
+
+  servo_R.write(90);
+  delay(1000);
+  servoPos_R.write(0);
+  delay(1000);
+  servo_R.write(0);
+  delay(1000);
+  servoPos_R.write(90);
+  delay(1000);
+  
+  }
+
+void recebe_cubo(){
+  
+  /*Posição para receber o cubo
+   * servos de posição: frente e esquerda no zero, direita e fundo no 90
+   */
+  servoPos_F.write(pos);
+  servoPos_L.write(pos);
+  delay(2000);
+  
+  servoPos_B.write(pos);
+  servoPos_R.write(pos);
+  delay(2000);
+  
+  pos = 90;
+  servoPos_B.write(pos);
+  servoPos_R.write(pos);
+  delay(4000);
+
+  //segura o cubo
+  servoPos_F.write(pos);
+  servoPos_L.write(pos);
+  delay(2000);
+}
+
+void solta_cubo(){
+  pos = 0;
+  
+  servoPos_F.write(pos);
+  servoPos_L.write(pos);
+  delay(2000);
+  
+  servoPos_B.write(pos);
+  servoPos_R.write(pos);
+  delay(2000);
+    
+  }
+
+void loop(){
+  
+}
