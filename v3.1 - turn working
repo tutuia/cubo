@@ -34,7 +34,7 @@ void setup(){
   servo_R.write(0);
 
   recebe_cubo();
-  turn_clockwise();
+  up_clockwise();
   /*
   F_clockwise();
   delay(1000);
@@ -55,6 +55,34 @@ void setup(){
   solta_cubo();
 }
 
+void up_clockwise(){
+  turn_clockwise();
+  R_clockwise();
+  turn_line();
+  
+   }
+
+void up_line(){
+  turn_clockwise();
+  R_line();
+  turn_line();
+  
+   }
+
+void down_clockwise(){
+  turn_clockwise();
+  L_clockwise();
+  turn_line();
+  
+   }
+
+void down_line(){
+  turn_clockwise();
+  L_line();
+  turn_line();
+  
+   }
+   
 void turn_clockwise(){
   servoPos_B.write(0);
   delay(1000);
@@ -91,6 +119,47 @@ void turn_clockwise(){
   servo_B.write(0);
   delay(1000);
   servoPos_B.write(90);
+  delay(1000);
+  
+}
+
+void turn_line(){
+  servoPos_F.write(0);
+  delay(1000);
+  servo_F.write(170);
+  delay(1000);
+  servoPos_F.write(90);
+  delay(1000);
+  servo_F.write(65);
+  delay(1000);
+  
+  servoPos_R.write(0);
+  servoPos_L.write(0);
+  delay(1000);
+  
+  servo_B.write(80);
+  servo_F.write(0);
+  delay(1000);
+  
+  servoPos_R.write(90);
+  servoPos_L.write(90);
+  delay(1000);
+  
+  
+  servoPos_B.write(0);
+  delay(1000);
+  servo_B.write(0);
+  delay(1000);
+  servoPos_B.write(90);
+  delay(1000);
+  servo_F.write(90);
+  delay(1000);
+  servoPos_F.write(0);
+  delay(1000);
+  servo_F.write(0);
+  delay(1000);
+  servoPos_F.write(90);
+  delay(1000);
   
 }
 
