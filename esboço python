@@ -1,0 +1,97 @@
+middle_algorithm = {'a':'',
+         'b':'',
+         'c':'',
+         'd':'',
+         'e':'',
+         'f':'',
+         'g':'',
+         'h':'',
+         'i':'',
+         'j':'',
+         'k':'',
+         'l':'',
+         'm':'',
+         'n':'',
+         'o':'',
+         'p':'',
+         'q':'',
+         'r':'',
+         's':'',
+         't':'',
+         'u':'',
+         'v':'',
+         'w':'',
+         'x':''}
+
+corner_algorithm = 
+{'a':'',
+'b':'',
+'c':'',
+'d':'',
+'e':'',
+'f':'',
+'g':'',
+'h':'',
+'i':'',
+'j':'',
+'k':'',
+'l':'',
+'m':'',
+'n':'',
+'o':'',
+'p':'',
+'q':'',
+'r':'',
+'s':'',
+'t':'',
+'u':'',
+'v':'',
+'w':'',
+'x':''}
+
+'''
+depois de ler as cores montar o gabarito
+top_color = cor1
+left_color = cor2
+front_color = cor3
+right_color = cor4
+back_color = cor5
+down_color = cor6
+
+top_middle_template =
+{'a':back_color,
+'b':right_color,
+'c':front_color,
+'d':left_color}
+      
+left_middle_template =
+{'e':top_color,
+'f':front_color,
+'g':down_color,
+'h':back_color}
+
+front_middle_template =
+{'i':top_color,
+'j':right_color,
+'k':down_color,
+'l':left_color}
+
+right_middle_template =
+{'m':top_color,
+ 'n':back_color,
+ 'o':down_color,
+ 'p':front_color}
+         
+back_middle_template =
+{'q':top_color,
+'r':left_color,
+'s':down_color,
+'t':right_color}
+         
+down_middle_template =
+{'u':right_color,
+'v':back_color,
+'w':front_color,
+'x':left_color}
+
+'''
