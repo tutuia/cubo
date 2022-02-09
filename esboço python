@@ -58,6 +58,7 @@ right_color = cor4
 back_color = cor5
 down_color = cor6
 
+#inverter a ordem, procurar pela cor para encontrar a posição
 top_middle_template =
 {'a':back_color,
 'b':right_color,
@@ -93,5 +94,11 @@ down_middle_template =
 'v':back_color,
 'w':front_color,
 'x':left_color}
+
+template_corner_top = 
+{back_color:{left_color:'a', right_color:'b'},
+left_color:{back_color:'a', front_color:'d'},
+front_color:{left_color:'d', right_color:'c'},
+right_color:{front_color:'c', back_color:'b'}}
 
 '''
