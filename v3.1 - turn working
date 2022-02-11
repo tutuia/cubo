@@ -1,5 +1,9 @@
 #include <Servo.h>
 
+const int middle_peace_position[] PROGMEM ={}
+const int corner_2peace_position[] PROGMEM ={}
+const int corner_3peace_position[] PROGMEM ={}
+
 // servos para manipulação do cubo
 Servo servo_F;
 Servo servo_R;
@@ -54,6 +58,20 @@ void setup(){
   */
   solta_cubo();
 }
+
+void map_colors(){
+  char faces_color[6] = {"wogrby"};
+  char corner_colors[24] ={"wwwwooooggggrrrrbbbbyyyy"};
+  char middle_colors[24] ={"wwwwooooggggrrrrbbbbyyyy"};
+
+  //preencher os vetores
+
+  
+  
+  
+  
+  
+  }
 
 void up_clockwise(){
   turn_clockwise();
