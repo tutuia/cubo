@@ -36,7 +36,17 @@ void map_colors(){
   int pos1;
 
   while(loop_time > 0){// botar um loop para enquanto o contador de zeros não zerar
-  
+
+    if(piece[buffer_position] == 0){
+      for(int i=0;i<24;i++){
+        if(piece[i] != 0){
+          buffer_position = i;
+          //coloca i na lista <<<<<----------
+          break;
+          }
+        }
+     }
+     
     buffer_color = middle_colors[buffer_position]; // cor do buffer
     face_position = find_face(buffer_color); // face em que deveria estar
   
@@ -45,7 +55,6 @@ void map_colors(){
     face_2nd_position = find_face(buffer_color);
 
     for(int i=0; i<4; i++){
-      //pos1 = piece[face_position * i]-1;
       pos1 = piece[(face_position * 4) + i] - 1;
       for(int j =0; j<4; j++){
         if(piece[pos1]-1 == ((face_2nd_position * 4)+j)){
@@ -56,31 +65,21 @@ void map_colors(){
           //atualizar o contador de zero --> para saber se todas as posições estão corretas
           if(piece[buffer_position] != 0){
             piece[buffer_position] = 0;
-            loop_time -= 1;
+            loop_time --;
             }
           if(piece[buffer_2nd_position] != 0){
             piece[buffer_2nd_position] = 0;
-            loop_time -= 1;
+            loop_time --;
             } 
             
-          //atualizar o buffer com os novos valores e posição  
-          if(loop_time != 0){
-            buffer_color = middle_colors[pos1];
-            face_position = find_face(buffer_color);
-          
-            buffer_2nd_position = piece[pos1] - 1;
-            buffer_color = middle_colors[buffer_2nd_position];
-            face_2nd_position = find_face(buffer_color);
-          }
-          
-          // repetir o loop até acabar de mapear
-          //inserir tratamentos para posições já corretas e para mais de uma sequencia
+          //atualizar o buffer com os novos valores e posição
+          if(loop_time != 0) buffer_position = pos1;
+
           i = 4;
           break;
         }
       }
     }
-  }
-  
+   }
   }
  
