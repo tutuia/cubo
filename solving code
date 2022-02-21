@@ -1,0 +1,86 @@
+void setup() {
+  // put your setup code here, to run once:
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int find_face(char color){
+  char faces_color[] = "wogrby";
+  int i;
+  
+  for(i = 0; i<6; i++){
+    if(faces_color[i] == color) break;
+    return i;
+  }
+}
+
+void map_colors(){
+//  char faces_color[] = "wogrby";
+  char corner_colors[] ="wwwwooooggggrrrrbbbbyyyy";
+  char middle_colors[] ="wwwwooooggggrrrrbbbbyyyy";
+  int loop_time = 24;
+
+  int piece[24] = {17, 13, 9, 5, 4, 12, 24, 18, 3, 16, 21, 6, 2, 20, 22, 10, 1, 8, 23, 14, 11, 15, 19, 7};
+
+  int face_position, face_2nd_position;
+  int buffer_position = 2;
+  int buffer_2nd_position;
+  char buffer_color;
+  int pos1;
+
+  while(loop_time > 0){// botar um loop para enquanto o contador de zeros não zerar
+  
+    buffer_color = middle_colors[buffer_position]; // cor do buffer
+    face_position = find_face(buffer_color); // face em que deveria estar
+  
+    buffer_2nd_position = piece[buffer_position] - 1;   //posição da peça no vetor
+    buffer_color = middle_colors[buffer_2nd_position]; // cor da peça
+    face_2nd_position = find_face(buffer_color);
+
+    for(int i=0; i<4; i++){
+      //pos1 = piece[face_position * i]-1;
+      pos1 = piece[(face_position * 4) + i] - 1;
+      for(int j =0; j<4; j++){
+        if(piece[pos1]-1 == ((face_2nd_position * 4)+j)){
+          
+          //salva na lista pra onde tem que ir <<<----------
+          
+          //coloca zero nas posições das peças no vetor piece -->verificar se já tinha zero no lugar
+          //atualizar o contador de zero --> para saber se todas as posições estão corretas
+          if(piece[buffer_position] != 0){
+            piece[buffer_position] = 0;
+            loop_time -= 1;
+            }
+          if(piece[buffer_2nd_position] != 0){
+            piece[buffer_2nd_position] = 0;
+            loop_time -= 1;
+            } 
+            
+          //atualizar o buffer com os novos valores e posição  
+          if(loop_time != 0){
+            buffer_color = middle_colors[pos1];
+            face_position = find_face(buffer_color);
+          
+            buffer_2nd_position = piece[pos1] - 1;
+            buffer_color = middle_colors[buffer_2nd_position];
+            face_2nd_position = find_face(buffer_color);
+          }
+          
+          // repetir o loop até acabar de mapear
+          //inserir tratamentos para posições já corretas e para mais de uma sequencia
+          i = 4;
+          break;
+        }
+      }
+    }
+  }
+  
+  }
+ 
