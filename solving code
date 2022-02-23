@@ -1,6 +1,8 @@
 void setup() {
   // put your setup code here, to run once:
-
+  Serial.begin(9600);
+  Serial.print("oi");
+  map_colors();
 }
 
 void loop() {
@@ -9,7 +11,7 @@ void loop() {
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////// Movements planning //////////////////////////////////////////////////////////////////////////
 
 int find_face(char color){
   char faces_color[] = "wogrby";
@@ -40,8 +42,11 @@ void map_colors(){
     if(piece[buffer_position] == 0){
       for(int i=0;i<24;i++){
         if(piece[i] != 0){
-          buffer_position = i;
-          //coloca i na lista <<<<<----------
+          buffer_position = i-1;
+          //coloca i na lista 
+          // lista cancelada <<<-----------
+          //Serial.print(i);
+          //chama a função para resolver??
           break;
           }
         }
@@ -59,27 +64,31 @@ void map_colors(){
       for(int j =0; j<4; j++){
         if(piece[pos1]-1 == ((face_2nd_position * 4)+j)){
           
-          //salva na lista pra onde tem que ir <<<----------
+          //CHAMA A FUNÇÃO PARA RESOLVER <<<----------
+          if(buffer_position == pos1)Serial.print("No lugar");
+          else Serial.print(pos1);
           
           //coloca zero nas posições das peças no vetor piece -->verificar se já tinha zero no lugar
           //atualizar o contador de zero --> para saber se todas as posições estão corretas
           if(piece[buffer_position] != 0){
             piece[buffer_position] = 0;
-            loop_time --;
+            loop_time = loop_time - 1;
             }
           if(piece[buffer_2nd_position] != 0){
             piece[buffer_2nd_position] = 0;
-            loop_time --;
+            loop_time = loop_time - 1;
             } 
             
           //atualizar o buffer com os novos valores e posição
           if(loop_time != 0) buffer_position = pos1;
-
           i = 4;
           break;
         }
       }
     }
    }
+   Serial.print("fim");
+   // Verificar paridade <<<<<----------
+   
   }
  
