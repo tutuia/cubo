@@ -281,7 +281,7 @@ void putting_middle_in_place(int whereTo){
 
 void map_colors(){
 //  char faces_color[] = "wogrby";
-  char corner_colors[] ="wwwwooooggggrrrrbbbbyyyy";
+// char corner_colors[] ="wwwwooooggggrrrrbbbbyyyy";
   char middle_colors[] ="wgwboooogygwrrrrbybwybyg";
 //  char middle_colors[] ="wwwwooooggggrrrrbbbbyyyy";
   int loop_time = 24;
@@ -296,14 +296,13 @@ void map_colors(){
   char buffer_color;
   int pos1;
   bool buffer_is_in_place = false;
+  bool moves_number_is_even = true;
 
   while(loop_time > 0){// botar um loop para enquanto o contador de zeros não zerar
 
     if(piece[buffer_position] == 0){
       for(int i=0;i<24;i++){
         if(piece[i] != 0){
-          // mandar i para o buffer <<<-----------
-          //verificar paridade??
           buffer_position = i;
           keep_piece[0] = middle_colors[buffer_position];
           keep_piece[1] = middle_colors[piece[buffer_position]-1];
@@ -336,10 +335,12 @@ void map_colors(){
               Serial.print(keep_pos);
                //putting_middle_in_place(pos1);
                buffer_is_in_place = false;
+               moves_number_is_even = !moves_number_is_even;
               }
             Serial.print("\n Ir para pos1 antes: ");
             Serial.print(pos1);
             //putting_middle_in_place(pos1); <<<<<<<<<<<<<<<<<<<<<<<
+            moves_number_is_even = !moves_number_is_even;
             Serial.print("\n Ir para pos1 depois: ");
             Serial.print(pos1);
             }
@@ -370,6 +371,7 @@ void map_colors(){
             Serial.print("\n Ir para pos keep antes: ");
             Serial.print(buffer_position);
            // putting_middle_in_place(buffer_position);   <<<<<<<<<<<<<<<<<<<<
+            moves_number_is_even = !moves_number_is_even;
             Serial.print("\n Ir para pos keep depois: ");
             Serial.print(buffer_position);
           }
@@ -385,10 +387,12 @@ void map_colors(){
       }
       
    }
-   //Serial.print("\n\n piece: ");
-   //for(int i = 0; i<24; i++) Serial.print(piece[i]);
+   
    Serial.print("fim");
-   // Verificar paridade <<<<<----------
+   if(moves_number_is_even == false){
+    swap(); //verifica paridade
+     Serial.print("\n Não e par");
+    } 
     
   }
  
