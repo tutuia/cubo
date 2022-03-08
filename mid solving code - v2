@@ -37,8 +37,7 @@ void setup(){
 
   recebe_cubo();
   //U_counterClock();
-  turn_up_2front();
-  turn_front_2up();
+  map_colors();
   solta_cubo();
 }
 
@@ -57,6 +56,8 @@ int find_face(char color){
 }
 
 void putting_middle_in_place(int whereTo){
+  Serial.print("\n Ir para: ");
+  Serial.print(whereTo);
   if(whereTo < 8){
     if(whereTo == 0){
       Lw_clockwise();
@@ -294,6 +295,7 @@ void map_colors(){
   int buffer_2nd_position;
   char buffer_color;
   int pos1;
+  bool buffer_is_in_place = false;
 
   while(loop_time > 0){// botar um loop para enquanto o contador de zeros não zerar
 
@@ -308,6 +310,7 @@ void map_colors(){
           keep_pos = buffer_position;
           Serial.print("\n Posição salva: ");
           Serial.print(buffer_position); 
+          buffer_is_in_place = true;
 
           break;
           }
@@ -328,7 +331,16 @@ void map_colors(){
          
           //CHAMA A FUNÇÃO PARA RESOLVER <<<----------
           if(buffer_position != pos1){
-            Serial.print("\n Ir para pos1: ");
+            if(buffer_is_in_place == true){
+              Serial.print("\n Ir para pos salva: ");
+              Serial.print(keep_pos);
+               //putting_middle_in_place(pos1);
+               buffer_is_in_place = false;
+              }
+            Serial.print("\n Ir para pos1 antes: ");
+            Serial.print(pos1);
+            //putting_middle_in_place(pos1); <<<<<<<<<<<<<<<<<<<<<<<
+            Serial.print("\n Ir para pos1 depois: ");
             Serial.print(pos1);
             }
           /*
@@ -352,8 +364,13 @@ void map_colors(){
           i = 4;
           break;
         } else if(i== 3 and j == 3 and buffer_position != keep_pos){
+            Serial.print("\n buffer antes keep: ");
+            Serial.print(buffer_position);
             buffer_position = keep_pos;
-            Serial.print("\n Ir para pos keep: ");
+            Serial.print("\n Ir para pos keep antes: ");
+            Serial.print(buffer_position);
+           // putting_middle_in_place(buffer_position);   <<<<<<<<<<<<<<<<<<<<
+            Serial.print("\n Ir para pos keep depois: ");
             Serial.print(buffer_position);
           }
       }
