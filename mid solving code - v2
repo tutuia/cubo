@@ -12,7 +12,10 @@ Servo servoPos_R;
 Servo servoPos_B;
 Servo servoPos_L;
 
-int pos = 0;
+const int posZero = 0;
+const int approachCube = 90; // 90° for servoPos_
+const int pos90_claw = 70; // 90° for servo_      tava 65
+const int pos180_claw = 170;
 
 void setup(){
 
@@ -37,7 +40,9 @@ void setup(){
 
   recebe_cubo();
   //U_counterClock();
-  map_colors();
+  //map_colors();
+  turn_clockwise();
+  turn_counterClock();
   solta_cubo();
 }
 
@@ -395,7 +400,9 @@ void map_colors(){
     } 
     
   }
- 
+
+
+
 
   
 /////////////////////////////////////////////////////////// Servo Moves /////////////////////////////////////////////////////////////////  
@@ -487,344 +494,339 @@ void S_counterClock(){
   }
    
 void turn_up_2front(){
-  servoPos_R.write(0);
+  servoPos_R.write(posZero);
   delay(1000);
-  servo_R.write(170);
+  servo_R.write(pos180_claw);
   delay(1000);
-  servoPos_R.write(90);
+  servoPos_R.write(approachCube);
   delay(1000);
-  servo_R.write(65);
-  delay(1000);
-  
-  servoPos_B.write(0);
-  servoPos_F.write(0);
+  servo_R.write(pos90_claw);
   delay(1000);
   
-  servo_L.write(80);
-  servo_R.write(0);
+  servoPos_B.write(posZero);
+  servoPos_F.write(posZero);
   delay(1000);
   
-  servoPos_B.write(90);
-  servoPos_F.write(90);
+  servo_L.write(pos90_claw);
+  servo_R.write(posZero);
+  delay(1000);
+  
+  servoPos_B.write(approachCube);
+  servoPos_F.write(approachCube);
   delay(1000);
   
   
-  servoPos_L.write(0);
+  servoPos_L.write(posZero);
   delay(1000);
-  servo_L.write(0);
+  servo_L.write(posZero);
   delay(1000);
-  servoPos_L.write(90);
+  servoPos_L.write(approachCube);
   delay(1000);
-  servo_R.write(90);
+  servo_R.write(approachCube);
   delay(1000);
-  servoPos_R.write(0);
+  servoPos_R.write(posZero);
   delay(1000);
-  servo_R.write(0);
+  servo_R.write(posZero);
   delay(1000);
-  servoPos_R.write(90);
+  servoPos_R.write(approachCube);
   delay(1000);
   
   }
 
 void turn_front_2up(){
-  servoPos_L.write(0);
+  servoPos_L.write(posZero);
   delay(1000);
-  servo_L.write(170);
+  servo_L.write(pos180_claw);
   delay(1000);
-  servoPos_L.write(90);
+  servoPos_L.write(approachCube);
   delay(1000);
-  servo_L.write(65);
-  delay(1000);
-  
-  servoPos_B.write(0);
-  servoPos_F.write(0);
+  servo_L.write(pos90_claw);
   delay(1000);
   
-  servo_R.write(80);
-  servo_L.write(0);
+  servoPos_B.write(posZero);
+  servoPos_F.write(posZero);
   delay(1000);
   
-  servoPos_B.write(90);
-  servoPos_F.write(90);
+  servo_R.write(pos90_claw);
+  servo_L.write(posZero);
+  delay(1000);
+  
+  servoPos_B.write(approachCube);
+  servoPos_F.write(approachCube);
   delay(1000);
   
   
-  servoPos_R.write(0);
+  servoPos_R.write(posZero);
   delay(1000);
-  servo_R.write(0);
+  servo_R.write(posZero);
   delay(1000);
-  servoPos_R.write(90);
+  servoPos_R.write(approachCube);
   delay(1000);
-  servo_L.write(90);
+  servo_L.write(approachCube);
   delay(1000);
-  servoPos_L.write(0);
+  servoPos_L.write(posZero);
   delay(1000);
-  servo_L.write(0);
+  servo_L.write(posZero);
   delay(1000);
-  servoPos_L.write(90);
+  servoPos_L.write(approachCube);
   delay(1000);
   
   }
    
 void turn_clockwise(){
-  servoPos_B.write(0);
+  servoPos_B.write(posZero);
   delay(1000);
-  servo_B.write(170);
+  servo_B.write(pos180_claw);
   delay(1000);
-  servoPos_B.write(90);
+  servoPos_B.write(approachCube);
   delay(1000);
-  servo_B.write(65);
-  delay(1000);
-  
-  servoPos_R.write(0);
-  servoPos_L.write(0);
+  servo_B.write(pos90_claw);
   delay(1000);
   
-  servo_F.write(80);
-  servo_B.write(0);
+  servoPos_R.write(posZero);
+  servoPos_L.write(posZero);
   delay(1000);
   
-  servoPos_R.write(90);
-  servoPos_L.write(90);
+  servo_F.write(pos90_claw);
+  servo_B.write(posZero);
+  delay(1000);
+  
+  servoPos_R.write(approachCube);
+  servoPos_L.write(approachCube);
   delay(1000);
   
   
-  servoPos_F.write(0);
+  servoPos_F.write(posZero);
   delay(1000);
-  servo_F.write(0);
+  servo_F.write(posZero);
   delay(1000);
-  servoPos_F.write(90);
+  servoPos_F.write(approachCube);
   delay(1000);
-  servo_B.write(90);
+  servo_B.write(approachCube);
   delay(1000);
-  servoPos_B.write(0);
+  servoPos_B.write(posZero);
   delay(1000);
-  servo_B.write(0);
+  servo_B.write(posZero);
   delay(1000);
-  servoPos_B.write(90);
+  servoPos_B.write(approachCube);
   delay(1000);
   
 }
 
 void turn_counterClock(){
-  servoPos_F.write(0);
+  servoPos_F.write(posZero);
   delay(1000);
-  servo_F.write(170);
+  servo_F.write(pos180_claw);
   delay(1000);
-  servoPos_F.write(90);
+  servoPos_F.write(approachCube);
   delay(1000);
-  servo_F.write(65);
-  delay(1000);
-  
-  servoPos_R.write(0);
-  servoPos_L.write(0);
+  servo_F.write(pos90_claw);
   delay(1000);
   
-  servo_B.write(80);
-  servo_F.write(0);
+  servoPos_R.write(posZero);
+  servoPos_L.write(posZero);
   delay(1000);
   
-  servoPos_R.write(90);
-  servoPos_L.write(90);
+  servo_B.write(pos90_claw);
+  servo_F.write(posZero);
+  delay(1000);
+  
+  servoPos_R.write(approachCube);
+  servoPos_L.write(approachCube);
   delay(1000);
   
   
-  servoPos_B.write(0);
+  servoPos_B.write(posZero);
   delay(1000);
-  servo_B.write(0);
+  servo_B.write(posZero);
   delay(1000);
-  servoPos_B.write(90);
+  servoPos_B.write(approachCube);
   delay(1000);
-  servo_F.write(90);
+  servo_F.write(approachCube);
   delay(1000);
-  servoPos_F.write(0);
+  servoPos_F.write(posZero);
   delay(1000);
-  servo_F.write(0);
+  servo_F.write(posZero);
   delay(1000);
-  servoPos_F.write(90);
+  servoPos_F.write(approachCube);
   delay(1000);
   
 }
 
 void F_clockwise(){
-    servo_F.write(90);
+    servo_F.write(approachCube);
     delay(1000);
-    servoPos_F.write(0);
+    servoPos_F.write(posZero);
     delay(1000);
-    servo_F.write(0);
+    servo_F.write(posZero);
     delay(1000);
-    servoPos_F.write(90);
+    servoPos_F.write(approachCube);
     delay(1000);   
 }
 
 void F_counterClock(){
-    servoPos_F.write(0);
+    servoPos_F.write(posZero);
     delay(1000);
-    servo_F.write(170);
+    servo_F.write(pos180_claw);
     delay(1000);
-    servoPos_F.write(90);
+    servoPos_F.write(approachCube);
     delay(1000);
-    servo_F.write(65);
+    servo_F.write(pos90_claw);
     delay(1000);   
-    servoPos_F.write(0);
+    servoPos_F.write(posZero);
     delay(1000);
-    servo_F.write(0);
+    servo_F.write(posZero);
     delay(1000);
-    servoPos_F.write(90);
+    servoPos_F.write(approachCube);
     delay(1000);
 }
 
 void R_clockwise(){
-    servo_R.write(90);
+    servo_R.write(approachCube);
     delay(1000);
-    servoPos_R.write(0);
+    servoPos_R.write(posZero);
     delay(1000);
-    servo_R.write(0);
+    servo_R.write(posZero);
     delay(1000);
-    servoPos_R.write(90);
+    servoPos_R.write(approachCube);
     delay(1000);   
 }
 
 void R_counterClock(){
-    servoPos_R.write(0);
+    servoPos_R.write(posZero);
     delay(1000);
-    servo_R.write(170);
+    servo_R.write(pos180_claw);
     delay(1000);
-    servoPos_R.write(90);
+    servoPos_R.write(approachCube);
     delay(1000);
-    servo_R.write(70);
+    servo_R.write(pos90_claw);
     delay(1000);   
-    servoPos_R.write(0);
+    servoPos_R.write(posZero);
     delay(1000);
-    servo_R.write(0);
+    servo_R.write(posZero);
     delay(1000);
-    servoPos_R.write(90);
+    servoPos_R.write(approachCube);
     delay(1000);
 }
 
 void B_clockwise(){
-    servo_B.write(90);
+    servo_B.write(approachCube);
     delay(1000);
-    servoPos_B.write(0);
+    servoPos_B.write(posZero);
     delay(1000);
-    servo_B.write(0);
+    servo_B.write(posZero);
     delay(1000);
-    servoPos_B.write(90);
+    servoPos_B.write(approachCube);
     delay(1000);   
 }
 
 void B_counterClock(){
-    servoPos_B.write(0);
+    servoPos_B.write(posZero);
     delay(1000);
-    servo_B.write(170);
+    servo_B.write(pos180_claw);
     delay(1000);
-    servoPos_B.write(90);
+    servoPos_B.write(approachCube);
     delay(1000);
-    servo_B.write(65);
+    servo_B.write(pos90_claw);
     delay(1000);   
-    servoPos_B.write(0);
+    servoPos_B.write(posZero);
     delay(1000);
-    servo_B.write(0);
+    servo_B.write(posZero);
     delay(1000);
-    servoPos_B.write(90);
+    servoPos_B.write(approachCube);
     delay(1000);
 }
 
 void L_clockwise(){
-    servo_L.write(90);
+    servo_L.write(approachCube);
     delay(1000);
-    servoPos_L.write(0);
+    servoPos_L.write(posZero);
     delay(1000);
-    servo_L.write(0);
+    servo_L.write(posZero);
     delay(1000);
-    servoPos_L.write(90);
+    servoPos_L.write(approachCube);
     delay(1000);   
 }
 
 void L_counterClock(){
-    servoPos_L.write(0);
+    servoPos_L.write(posZero);
     delay(1000);
-    servo_L.write(170);
+    servo_L.write(pos180_claw);
     delay(1000);
-    servoPos_L.write(90);
+    servoPos_L.write(approachCube);
     delay(1000);
-    servo_L.write(65);
+    servo_L.write(pos90_claw);
     delay(1000);   
-    servoPos_L.write(0);
+    servoPos_L.write(posZero);
     delay(1000);
-    servo_L.write(0);
+    servo_L.write(posZero);
     delay(1000);
-    servoPos_L.write(90);
+    servoPos_L.write(approachCube);
     delay(1000);
 }
 
 void turn_cube(){
-    servoPos_B.write(0);
+    servoPos_B.write(posZero);
     delay(1000);
-    servo_B.write(90);;
+    servo_B.write(approachCube);
     delay(1000);
-    servoPos_B.write(90);
+    servoPos_B.write(approachCube);
     delay(1000);
     
-    servoPos_R.write(0);
-    servoPos_L.write(0);
+    servoPos_R.write(posZero);
+    servoPos_L.write(posZero);
     delay(1000);
  
-    servo_F.write(90);
-    servo_B.write(0);
+    servo_F.write(approachCube);
+    servo_B.write(posZero);
     delay(2000);
     
-    servoPos_R.write(90);
-    servoPos_L.write(90);
+    servoPos_R.write(approachCube);
+    servoPos_L.write(approachCube);
     delay(1000);
     
-    servoPos_F.write(0);
+    servoPos_F.write(posZero);
     delay(1000);
-    servo_F.write(0);
+    servo_F.write(posZero);
     delay(1000);
-    servoPos_F.write(90);
+    servoPos_F.write(approachCube);
     delay(1000); 
 }
 
-//////////
 void recebe_cubo(){
 
   /*Posição para receber o cubo
    * servos de posição: frente e esquerda no zero, direita e fundo no 90
    */
-  servoPos_F.write(pos);
-  servoPos_L.write(pos);
+  servoPos_F.write(posZero);
+  servoPos_L.write(posZero);
   delay(2000);
 
-  servoPos_B.write(pos);
-  servoPos_R.write(pos);
+  servoPos_B.write(posZero);
+  servoPos_R.write(posZero);
   delay(2000);
 
-  pos = 90;
-  servoPos_B.write(pos);
-  servoPos_R.write(pos);
+  servoPos_B.write(approachCube);
+  servoPos_R.write(approachCube);
   delay(4000);
 
   //segura o cubo
-  servoPos_F.write(pos);
-  servoPos_L.write(pos);
+  servoPos_F.write(approachCube);
+  servoPos_L.write(approachCube);
   delay(2000);
 }
 
 void solta_cubo(){
-  pos = 0;
 
-  servoPos_F.write(pos);
-  servoPos_L.write(pos);
+  servoPos_F.write(posZero);
+  servoPos_L.write(posZero);
   delay(2000);
 
-  servoPos_B.write(pos);
-  servoPos_R.write(pos);
+  servoPos_B.write(posZero);
+  servoPos_R.write(posZero);
   delay(2000);
 
   }
 
   void loop(){
   }
-
-  ///////////
