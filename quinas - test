@@ -72,12 +72,12 @@ void map_colors(){
             if(buffer_is_in_place == true){
               Serial.print("\n Ir para pos salva: ");
               Serial.print(keep_pos);
-               //putting_middle_in_place(pos1);
+               //putting_corner_in_place(pos1);
                buffer_is_in_place = false;
               }
             Serial.print("\n Ir para pos1 antes: ");
             Serial.print(pos1);
-            //putting_middle_in_place(pos1); <<<<<<<<<<<<<<<<<<<<<<
+            //putting_corner_in_place(pos1); <<<<<<<<<<<<<<<<<<<<<<
             Serial.print("\n Ir para pos1 depois: ");
             Serial.print(pos1);
             }
@@ -107,7 +107,7 @@ void map_colors(){
             buffer_position = keep_pos;
             Serial.print("\n Ir para pos keep antes: ");
             Serial.print(buffer_position);
-           // putting_middle_in_place(buffer_position);   <<<<<<<<<<<<<<<<<<<<
+           // putting_corner_in_place(buffer_position);   <<<<<<<<<<<<<<<<<<<<
             Serial.print("\n Ir para pos keep depois: ");
             Serial.print(buffer_position);
           }
