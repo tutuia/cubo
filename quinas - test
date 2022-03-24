@@ -1,4 +1,4 @@
- void setup() {
+void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   map_colors();
@@ -89,11 +89,16 @@ void map_colors(){
       pos1 = (face_position * 4) + i;
       for(int j =0; j<4; j++){
         Serial.print("\n entrou certo 0");
-        if(piece[pos1]-1 == ((face_2nd_position * 4)+j)){
+        Serial.print("\n piece:");
+        Serial.print(piece[pos1]-1);
+        Serial.print("\n face +");
+        Serial.print("\n");
+        Serial.print(((face_2nd_position * 4)+j));
+        if(piece[pos1]-1 == ((face_2nd_position * 4)+j) or piece2[pos1]-1 == ((face_2nd_position * 4)+j)){
           Serial.print("\n entrou certo 1");
           for(int k=0; k<4; k++){ 
             Serial.print("\n entrou certo 2");
-            if(piece2[pos1]-1 == ((face_3rd_position * 4)+k)){
+            if(piece2[pos1]-1 == ((face_3rd_position * 4)+k) or piece[pos1]-1 == ((face_3rd_position * 4)+k)){
               Serial.print("\n entrou certo 3");
               //CHAMA A FUNÇÃO PARA RESOLVER <<<----------
               if(buffer_position != pos1){
