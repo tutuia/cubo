@@ -83,6 +83,7 @@ void map_colors(){
     Serial.print(buffer_3rd_position);
     Serial.print(face_3rd_position);
     Serial.print("\n");
+    int k = 0;
     
     for(int i=0; i<4; i++){
       //pos1 = piece[(face_position * 4) + i] - 1;
@@ -96,7 +97,7 @@ void map_colors(){
         Serial.print(((face_2nd_position * 4)+j));
         if(piece[pos1]-1 == ((face_2nd_position * 4)+j) or piece2[pos1]-1 == ((face_2nd_position * 4)+j)){
           Serial.print("\n entrou certo 1");
-          for(int k=0; k<4; k++){ 
+          for(k=0; k<4; k++){ 
             Serial.print("\n entrou certo 2");
             Serial.print("\n i: ");
             Serial.print(i);
@@ -147,7 +148,9 @@ void map_colors(){
           i = 4;
           j = 4;
           break;
-          }else if(i== 3 and k == 3 and buffer_position != keep_pos){
+          }
+          }
+        }else if(i== 3 and (k == 3 or j == 3) and buffer_position != keep_pos){
             Serial.print("\n buffer antes keep: ");
             Serial.print(buffer_position);
             buffer_position = keep_pos;
@@ -157,8 +160,6 @@ void map_colors(){
             Serial.print("\n Ir para pos keep depois: ");
             Serial.print(buffer_position);
           }
-          }
-        }
       }
 
     }// fim for
