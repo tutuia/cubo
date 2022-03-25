@@ -49,8 +49,6 @@ void map_colors(){
           keep_piece[1] = corner_colors[piece[buffer_position]-1];
           keep_piece[2] = corner_colors[piece2[buffer_position]-1];
           keep_pos = buffer_position;
-          Serial.print("\n Posição salva: ");
-          Serial.print(buffer_position); 
           buffer_is_in_place = true;
 
           break;
@@ -60,66 +58,35 @@ void map_colors(){
      
     buffer_color = corner_colors[buffer_position]; // cor do buffer
     face_position = find_face(buffer_color); // face em que deveria estar
-    Serial.print("\n color, pos, face: ");
-    Serial.print(buffer_color);
-    Serial.print(buffer_position);
-    Serial.print(face_position);
-    Serial.print("\n");
     
     buffer_2nd_position = piece[buffer_position] - 1;   //posição da peça no vetor
     buffer_color = corner_colors[buffer_2nd_position]; // cor da peça
     face_2nd_position = find_face(buffer_color);
-    Serial.print("\n color2, pos2, face: ");
-    Serial.print(buffer_color);
-    Serial.print(buffer_2nd_position);
-    Serial.print(face_2nd_position);
-    Serial.print("\n");
     
     buffer_3rd_position = piece2[buffer_position] - 1;   //posição da peça no vetor
     buffer_color = corner_colors[buffer_3rd_position]; // cor da peça
     face_3rd_position = find_face(buffer_color);
-    Serial.print("\n color3, pos3, face: ");
-    Serial.print(buffer_color);
-    Serial.print(buffer_3rd_position);
-    Serial.print(face_3rd_position);
-    Serial.print("\n");
-    int k = 0;
-    
+
+    int k = 0;    
     for(int i=0; i<4; i++){
       //pos1 = piece[(face_position * 4) + i] - 1;
       pos1 = (face_position * 4) + i;
       for(int j =0; j<4; j++){
-        Serial.print("\n entrou certo 0");
-        Serial.print("\n piece:");
-        Serial.print(piece[pos1]-1);
-        Serial.print("\n face +");
-        Serial.print("\n");
-        Serial.print(((face_2nd_position * 4)+j));
         if(piece[pos1]-1 == ((face_2nd_position * 4)+j) or piece2[pos1]-1 == ((face_2nd_position * 4)+j)){
-          Serial.print("\n entrou certo 1");
           for(k=0; k<4; k++){ 
-            Serial.print("\n entrou certo 2");
-            Serial.print("\n i: ");
-            Serial.print(i);
-            Serial.print("\n j: ");
-            Serial.print(j);
-            Serial.print("\n k: ");
-            Serial.print(k);
             if(piece2[pos1]-1 == ((face_3rd_position * 4)+k) or piece[pos1]-1 == ((face_3rd_position * 4)+k)){
-              Serial.print("\n entrou certo 3");
+
               //CHAMA A FUNÇÃO PARA RESOLVER <<<----------
               if(buffer_position != pos1){
                 if(buffer_is_in_place == true){
                   Serial.print("\n Ir para pos salva: ");
-                  Serial.print(keep_pos); //////////////////////////////????????????????????????
+                  Serial.print(pos1); //////////////////////////////????????????????????????
                   //putting_corner_in_place(pos1);
                   buffer_is_in_place = false;
                 }
                 Serial.print("\n Ir para pos1 antes: ");
                 Serial.print(pos1);
                 //putting_corner_in_place(pos1); <<<<<<<<<<<<<<<<<<<<<<
-                Serial.print("\n Ir para pos1 depois: ");
-                Serial.print(pos1);
               }
               /*
               else{ 
@@ -151,14 +118,10 @@ void map_colors(){
           }
           }
         }else if(i== 3 and (k == 3 or j == 3) and buffer_position != keep_pos){
-            Serial.print("\n buffer antes keep: ");
-            Serial.print(buffer_position);
             buffer_position = keep_pos;
             Serial.print("\n Ir para pos keep antes: ");
             Serial.print(buffer_position);
-           // putting_corner_in_place(buffer_position);   <<<<<<<<<<<<<<<<<<<<
-            Serial.print("\n Ir para pos keep depois: ");
-            Serial.print(buffer_position);
+           // putting_corner_in_place(buffer_position);   <<<<<<<<<<<<<<<<<<<<;
           }
       }
 
