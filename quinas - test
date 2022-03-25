@@ -98,6 +98,12 @@ void map_colors(){
           Serial.print("\n entrou certo 1");
           for(int k=0; k<4; k++){ 
             Serial.print("\n entrou certo 2");
+            Serial.print("\n i: ");
+            Serial.print(i);
+            Serial.print("\n j: ");
+            Serial.print(j);
+            Serial.print("\n k: ");
+            Serial.print(k);
             if(piece2[pos1]-1 == ((face_3rd_position * 4)+k) or piece[pos1]-1 == ((face_3rd_position * 4)+k)){
               Serial.print("\n entrou certo 3");
               //CHAMA A FUNÇÃO PARA RESOLVER <<<----------
@@ -141,7 +147,7 @@ void map_colors(){
           i = 4;
           j = 4;
           break;
-          }else if(i== 3 and j == 3 and k == 3 and buffer_position != keep_pos){
+          }else if(i== 3 and k == 3 and buffer_position != keep_pos){
             Serial.print("\n buffer antes keep: ");
             Serial.print(buffer_position);
             buffer_position = keep_pos;
