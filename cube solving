@@ -81,7 +81,7 @@ void putting_middle_in_place(int whereTo) {
       swap();
     }
     else if (whereTo == 2) {
-      // ??? <<<<<<<<---------------
+      // BUFFER
     }
     else if (whereTo == 3) {
       L_clockwise();
@@ -152,7 +152,6 @@ void putting_middle_in_place(int whereTo) {
       D_counterClock();
       S_counterClock();
       swap();
-      turn_up_2front();
       S_clockwise();
       D_clockwise();
 
@@ -209,7 +208,7 @@ void putting_middle_in_place(int whereTo) {
   }
   else {
     if (whereTo == 8) {
-      //<<<<< ???????
+      //BUFFER
     }
     else if (whereTo == 9) {
       E_counterClock();
