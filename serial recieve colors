@@ -1,0 +1,57 @@
+byte byteRead;
+char faces_color[6];  
+
+void setup() {                
+//configura a comunicação seria com baud rate de 9600
+  Serial.begin(9600);
+}
+ 
+void loop() {
+  char middle_colors[24], corner_colors[24], c;
+  int i = 0;
+  Serial.write("\n ##############################################################################"); 
+  Serial.write("\n Informe as iniciais dos nomes em inglês das cores: ");
+  Serial.write("\n exemplo: informe w se a cor for branca");  
+  Serial.write("\n na seguninte ordem 012345678 percorrendo a face em sentido horário onde:"); 
+  Serial.write("\n 0 | 1 | 2"); 
+  Serial.write("\n ----------"); 
+  Serial.write("\n 7 | 8 | 3");
+  Serial.write("\n ----------");  
+  Serial.write("\n 6 | 5 | 4"); 
+
+  Serial.write("\n\n EXEMPLO: se"); 
+  Serial.write("\n b | y | o"); 
+  Serial.write("\n ----------"); 
+  Serial.write("\n r | r | y");
+  Serial.write("\n ----------");  
+  Serial.write("\n o | w | g"); 
+  Serial.write("\n\n INFORMAR: byoygworr"); 
+  Serial.write("\n ##############################################################################"); 
+
+  while(i<6){
+    int j = 0;
+    int aux_mid = 0;
+    int aux_corner = 0;
+    while(j<9){
+      if(Serial.available() > 0){ 
+        c = Serial.read();
+        if(c != '\n'){
+          if(j==8){
+            faces_color[i] = c;
+            j++;
+            }else if(j%2 == 0){
+              corner_colors[(4*i)+aux_corner] = c;
+              aux_corner++;
+              j++;
+              }else{
+                middle_colors[(4*i)+aux_mid] = c;
+                aux_mid++;
+                j++;
+                } 
+          }   
+        }
+      }
+    i++;
+    }
+    
+}
