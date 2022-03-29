@@ -39,6 +39,7 @@ void setup() {
   servo_R.write(0);
 
   recebe_cubo();
+  //swap();
   map_colors();
   solta_cubo();
 }
@@ -476,13 +477,13 @@ void map_colors() {
             if (buffer_is_in_place == true) {
               Serial.print("\n Ir para pos salva: ");
               Serial.print(keep_pos);
-              //putting_middle_in_place(keep_pos); //<<<<<<<<<<<<<<<<<<<
+              putting_middle_in_place(keep_pos); //<<<<<<<<<<<<<<<<<<<
               buffer_is_in_place = false;
               moves_number_is_even = !moves_number_is_even;
             }
             Serial.print("\n Ir para pos1 antes: ");
             Serial.print(pos1);
-            //putting_middle_in_place(pos1); // <<<<<<<<<<<<<<<<<<<<<<<
+            putting_middle_in_place(pos1); // <<<<<<<<<<<<<<<<<<<<<<<
             moves_number_is_even = !moves_number_is_even;
           }
           if (piece[buffer_position] != 0) {
@@ -500,7 +501,7 @@ void map_colors() {
           buffer_position = keep_pos;
           Serial.print("\n Ir para pos keep antes: ");
           Serial.print(buffer_position);
-          //putting_middle_in_place(buffer_position);   // <<<<<<<<<<<<<<<<<<<<
+          putting_middle_in_place(buffer_position);   // <<<<<<<<<<<<<<<<<<<<
           moves_number_is_even = !moves_number_is_even;
         }
       }
@@ -722,21 +723,21 @@ void Lw_counterClock(int times) {
 }
 
 void S_clockwise() {
-  turn_up_2front();
-  R_clockwise();
-  L_counterClock(1);
+  F_counterClock(1);
+  B_clockwise();
+  turn_clockwise();
 }
 
 void S_counterClock(int times) {
   if(times == 1){
-    L_clockwise();
-    R_counterClock(1);
+    F_clockwise();
+    B_counterClock(1);
   }else{
-    L_counterClock(2);
-    R_counterClock(2);
-    turn_front_2up();
+    F_counterClock(2);
+    B_counterClock(2);
+    turn_counterClock();
     }
-  turn_front_2up();
+  turn_counterClock();
 }
 
 void turn_up_2front() {
