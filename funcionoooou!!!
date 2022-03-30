@@ -1,0 +1,1057 @@
+#include <Servo.h>
+char faces_color[6];
+char middle_colors[24], corner_colors[24];  
+
+// servos para manipulação do cubo
+Servo servo_F;
+Servo servo_R;
+Servo servo_B;
+Servo servo_L;
+
+//servos de posição
+Servo servoPos_F;
+Servo servoPos_R;
+Servo servoPos_B;
+Servo servoPos_L;
+
+const int posZero = 0;
+const int approachCube = 90; // 90° for servoPos_
+const int pos90_claw = 75; // 90° for servo_      tava 65
+const int pos180_claw = 170;
+
+void setup() {
+
+  delay(2000);
+  Serial.begin(9600);
+  Serial.print("oi");
+
+  servoPos_F.attach(8);
+  servoPos_R.attach(9);
+  servoPos_B.attach(10);
+  servoPos_L.attach(11);
+
+  servo_F.attach(2);
+  servo_R.attach(3);
+  servo_B.attach(4);
+  servo_L.attach(5);
+
+  servo_F.write(0);
+  servo_L.write(0);
+  servo_B.write(0);
+  servo_R.write(0);
+
+  recebe_cubo();
+  
+  Serial.write("\n ##############################################################################"); 
+  Serial.write("\n Informe as iniciais dos nomes em inglês das cores: ");
+  Serial.write("\n exemplo: informe w se a cor for branca");  
+  Serial.write("\n na seguninte ordem 012345678 percorrendo a face em sentido horário onde:"); 
+  Serial.write("\n 0 | 1 | 2"); 
+  Serial.write("\n ----------"); 
+  Serial.write("\n 7 | 8 | 3");
+  Serial.write("\n ----------");  
+  Serial.write("\n 6 | 5 | 4"); 
+
+  Serial.write("\n\n EXEMPLO: se"); 
+  Serial.write("\n b | y | o"); 
+  Serial.write("\n ----------"); 
+  Serial.write("\n r | r | y");
+  Serial.write("\n ----------");  
+  Serial.write("\n o | w | g"); 
+  Serial.write("\n\n INFORMAR: byoygworr"); 
+  Serial.write("\n ##############################################################################"); 
+  
+  char c;
+  int i = 0;
+  while(i<6){
+    int j = 0;
+    int aux_mid = 0;
+    int aux_corner = 0;
+    while(j<9){
+      if(Serial.available() > 0){ 
+        c = Serial.read();
+        if(c != '\n'){
+          if(j==8){
+            faces_color[i] = c;
+            j++;
+            }else if(j%2 == 0){
+              corner_colors[(4*i)+aux_corner] = c;
+              aux_corner++;
+              j++;
+              }else{
+                middle_colors[(4*i)+aux_mid] = c;
+                aux_mid++;
+                j++;
+                } 
+          }   
+        }
+      }
+    i++;
+    if(i == 1){
+      turn_front_2up();
+      turn_clockwise();
+      }else if(i == 5){
+        turn_counterClock();
+        turn_counterClock();
+        turn_front_2up();
+        }else if(i == 6){
+          turn_up_2front();
+          turn_up_2front();
+          }else turn_counterClock();       
+    }
+
+  map_colors();
+  map_corners();
+  solta_cubo();
+}
+
+///////////////////////////////////////////////////// Movements planning //////////////////////////////////////////////////////////////////////////
+
+int find_face(char color) {
+  //char faces_color[] = "wogrby";
+  int i;
+
+  for (i = 0; i < 6; i++) {
+    if (faces_color[i] == color) {
+      break;
+    }
+  }
+  return i;
+}
+
+void putting_middle_in_place(int whereTo) {
+  Serial.print("\n Ir para: ");
+  Serial.print(whereTo);
+  if (whereTo < 8) {
+    if (whereTo == 0) {
+      Lw_clockwise();
+      D_counterClock(1);
+      S_counterClock(2);
+      swap();
+      S_counterClock(2);
+      D_clockwise();
+      Lw_counterClock(1);
+
+    }
+    else if (whereTo == 1) {
+      swap();
+    }
+    else if (whereTo == 2) {
+      // BUFFER
+    }
+    else if (whereTo == 3) {
+      L_counterClock(2);
+      S_counterClock(2);
+      swap();
+      S_counterClock(2);
+      L_counterClock(2);
+    }
+    else if (whereTo == 4) {
+      S_clockwise();
+      swap();
+      S_counterClock(1);
+
+    }
+    else if (whereTo == 5) {
+      L_counterClock(1);
+      S_clockwise();
+      swap();
+      S_counterClock(1);
+      L_clockwise();
+
+    }
+    else if (whereTo == 6) {
+      L_counterClock(2);
+      S_clockwise();
+      swap();
+      S_counterClock(1);
+      L_counterClock(2);
+
+    }
+    else if (whereTo == 7) {
+      L_clockwise();
+      S_clockwise();
+      swap();
+      S_counterClock(1);
+      L_counterClock(1);
+    }
+  }
+  else if (whereTo > 15) {
+    if (whereTo == 16) {
+      Lw_clockwise();
+      D_clockwise();
+      S_counterClock(1);
+      swap();
+      S_clockwise();
+      D_counterClock(1);
+      Lw_counterClock(1);
+
+    }
+    else if (whereTo == 17) {
+      L_counterClock(1);
+      S_counterClock(2);
+      swap();
+      S_counterClock(2);
+      L_clockwise();
+
+    }
+    else if (whereTo == 18) {
+      D_counterClock(1);
+      S_counterClock(1);
+      swap();
+      S_clockwise();
+      D_clockwise();
+
+    }
+    else if (whereTo == 19) {
+      E_clockwise(1);
+      L_clockwise();
+      S_clockwise();
+      swap();
+      S_counterClock(1);
+      L_counterClock(1);
+      E_counterClock(1);
+
+    }
+    else if (whereTo == 20) {
+      D_counterClock(1);
+      S_counterClock(2);
+      swap();
+      S_counterClock(2);
+      D_clockwise();
+
+    }
+    else if (whereTo == 21) {
+      D_counterClock(2);
+      S_counterClock(2);
+      swap();
+      S_counterClock(2);
+      D_counterClock(2);
+
+    }
+    else if (whereTo == 22) {
+      D_clockwise();
+      S_counterClock(2);
+      swap();
+      S_counterClock(2);
+      D_counterClock(1);
+
+    }
+    else if (whereTo == 23) {
+      S_counterClock(2);
+      swap();
+      S_counterClock(2);
+    }
+  }
+  else {
+    if (whereTo == 8) {
+      //BUFFER
+    }
+    else if (whereTo == 9) {
+      E_counterClock(1);
+      L_counterClock(1);
+      S_clockwise();
+      swap();
+      S_counterClock(1);
+      L_clockwise();
+      E_clockwise(1);
+    }
+    else if (whereTo == 10) {
+      D_clockwise();
+      S_counterClock(1);
+      swap();
+      S_clockwise();
+      D_counterClock(1);
+    }
+    else if (whereTo == 11) {
+      L_clockwise();
+      S_counterClock(2);
+      swap();
+      S_counterClock(2);
+      L_counterClock(1);
+
+    }
+    else if (whereTo == 12) {
+      S_clockwise();
+      D_counterClock(2);
+      S_counterClock(2);
+      swap();
+      S_counterClock(2);
+      D_counterClock(2);
+      S_counterClock(1);
+    }
+    else if (whereTo == 13) {
+      E_clockwise(2);
+      L_counterClock(1);
+      S_clockwise();
+      swap();
+      S_counterClock(1);
+      L_clockwise();
+      E_clockwise(2);
+
+    }
+    else if (whereTo == 14) {
+      S_counterClock(1);
+      swap();
+      S_clockwise();
+
+    }
+    else if (whereTo == 15) {
+      E_clockwise(2);
+      L_clockwise();
+      S_clockwise();
+      swap();
+      S_counterClock(1);
+      L_counterClock(1);
+      E_clockwise(2);
+    }
+  }
+}
+
+void putting_corner_in_place(int whereTo) {
+  Serial.print("\n Ir para: ");
+  Serial.print(whereTo);
+  if (whereTo < 8) {
+    if (whereTo == 0) {
+      L_counterClock(2);
+      D_counterClock(1);
+      B_counterClock(2);
+      swap();
+      B_counterClock(2);
+      D_clockwise();
+      L_counterClock(2);
+
+    }
+    else if (whereTo == 1) {
+      swap();
+    }
+    else if (whereTo == 2) {
+      //BUFFER
+    }
+    else if (whereTo == 3) {
+      L_counterClock(2);
+      B_counterClock(2);
+      swap();
+      B_counterClock(2);
+      L_counterClock(2);
+
+    }
+    else if (whereTo == 4) {
+      B_counterClock(1);
+      swap();
+      B_clockwise();
+
+    }
+    else if (whereTo == 5) {
+      L_counterClock(1);
+      B_counterClock(1);
+      swap();
+      B_clockwise();
+      L_clockwise();
+
+    }
+    else if (whereTo == 6) {
+      L_counterClock(2);
+      B_counterClock(1);
+      swap();
+      B_clockwise();
+      L_counterClock(2);
+
+    }
+    else if (whereTo == 7) {
+      L_clockwise();
+      B_counterClock(1);
+      swap();
+      B_clockwise();
+      L_counterClock(1);
+    }
+  }
+  else if (whereTo > 15) {
+    if (whereTo == 16) {
+      B_clockwise();
+      L_counterClock(1);
+      B_counterClock(2);
+      swap();
+      B_counterClock(2);
+      L_clockwise();
+      B_counterClock(1);
+    }
+    else if (whereTo == 17) {
+      L_counterClock(1);
+      B_counterClock(2);
+      swap();
+      B_counterClock(2);
+      L_clockwise();
+
+    }
+    else if (whereTo == 18) {
+      D_counterClock(1);
+      B_clockwise();
+      swap();
+      B_counterClock(1);
+      D_clockwise();
+
+    }
+    else if (whereTo == 19) {
+      D_counterClock(2);
+      L_clockwise();
+      B_counterClock(2);
+      swap();
+      B_counterClock(2);
+      L_counterClock(1);
+      D_counterClock(2);
+
+    }
+    else if (whereTo == 20) {
+      D_counterClock(1);
+      B_counterClock(2);
+      swap();
+      B_counterClock(2);
+      D_clockwise();
+
+    }
+    else if (whereTo == 21) {
+      D_counterClock(2);
+      B_counterClock(2);
+      swap();
+      B_counterClock(2);
+      D_counterClock(2);
+
+    }
+    else if (whereTo == 22) {
+      D_clockwise();
+      B_counterClock(2);
+      swap();
+      B_counterClock(2);
+      D_counterClock(1);
+
+    }
+    else if (whereTo == 23) {
+      B_counterClock(2);
+      swap();
+      B_counterClock(2);
+    }
+  }
+  else {
+    if (whereTo == 8) {
+      L_clockwise();
+      D_counterClock(1);
+      B_counterClock(2);
+      swap();
+      B_counterClock(2);
+      D_clockwise();
+      L_counterClock(1);
+    }
+    else if (whereTo == 9) {
+      //BUFFER
+    }
+    else if (whereTo == 10) {
+      D_clockwise();
+      B_clockwise();
+      swap();
+      B_counterClock(1);
+      D_counterClock(1);
+    }
+    else if (whereTo == 11) {
+      L_clockwise();
+      B_counterClock(2);
+      swap();
+      B_counterClock(2);
+      L_counterClock(1);
+
+    }
+    else if (whereTo == 12) {
+     //BUFFER 
+    }
+    else if (whereTo == 13) {
+      B_counterClock(2);
+      L_clockwise();
+      B_counterClock(1);
+      swap();
+      B_clockwise();
+      L_counterClock(1);
+      B_counterClock(2);
+
+    }
+    else if (whereTo == 14) {
+      B_clockwise();
+      swap();
+      B_counterClock(1);
+
+    }
+    else if (whereTo == 15) {
+      D_counterClock(1);
+      L_clockwise();
+      B_counterClock(2);
+      swap();
+      B_counterClock(2);
+      L_counterClock(1);
+      D_clockwise();
+    }
+  }
+}
+
+void map_colors() {
+  //char middle_colors[] = "wgwboooogygwrrrrbybwybyg";
+  //char middle_colors[] = "gyrrbwbwwgbboyoorggrywyo"; <<< erro
+  int loop_time = 24;
+  char keep_piece[3];
+  int keep_pos;
+
+  int piece[24] = {17, 13, 9, 5, 4, 12, 24, 18, 3, 16, 21, 6, 2, 20, 22, 10, 1, 8, 23, 14, 11, 15, 19, 7};
+
+  int face_position, face_2nd_position;
+  int buffer_position = 2;
+  int buffer_2nd_position;
+  char buffer_color;
+  int pos1;
+  bool buffer_is_in_place = false;
+  bool moves_number_is_even = true;
+
+  while (loop_time > 0) { 
+
+    if (piece[buffer_position] == 0) {
+      for (int i = 0; i < 24; i++) {
+        if (piece[i] != 0) {
+          buffer_position = i;
+          keep_piece[0] = middle_colors[buffer_position];
+          keep_piece[1] = middle_colors[piece[buffer_position] - 1];
+          keep_pos = buffer_position;
+          buffer_is_in_place = true;
+
+          break;
+        }
+      }
+    }
+
+    buffer_color = middle_colors[buffer_position]; // cor do buffer
+    face_position = find_face(buffer_color); // face em que deveria estar
+    buffer_2nd_position = piece[buffer_position] - 1;   //posição da peça no vetor
+    buffer_color = middle_colors[buffer_2nd_position]; // cor da peça
+    face_2nd_position = find_face(buffer_color);
+
+    for (int i = 0; i < 4; i++) {
+      pos1 = (face_position * 4) + i;
+      for (int j = 0; j < 4; j++) {
+        if (piece[pos1] - 1 == ((face_2nd_position * 4) + j)) {
+          if (buffer_position != pos1) {
+            if (buffer_is_in_place == true) {
+              Serial.print("\n Ir para pos salva: ");
+              Serial.print(keep_pos);
+              putting_middle_in_place(keep_pos); //<<<<<<<<<<<<<<<<<<<
+              buffer_is_in_place = false;
+              moves_number_is_even = !moves_number_is_even;
+            }
+            Serial.print("\n Ir para pos1 antes: ");
+            Serial.print(pos1);
+            putting_middle_in_place(pos1); // <<<<<<<<<<<<<<<<<<<<<<<
+            moves_number_is_even = !moves_number_is_even;
+          }
+          if (piece[buffer_position] != 0) {
+            piece[buffer_position] = 0;
+            loop_time = loop_time - 1;
+          }
+          if (piece[buffer_2nd_position] != 0) {
+            piece[buffer_2nd_position] = 0;
+            loop_time = loop_time - 1;
+          }
+          if (loop_time != 0) buffer_position = pos1;
+          i = 4;
+          break;
+        }else if (i == 3 and j == 3 and buffer_position != keep_pos) {
+          buffer_position = keep_pos;
+          Serial.print("\n Ir para pos keep antes: ");
+          Serial.print(buffer_position);
+          putting_middle_in_place(buffer_position);   // <<<<<<<<<<<<<<<<<<<<
+          moves_number_is_even = !moves_number_is_even;
+        }
+      }
+
+    }// fim for
+    Serial.print("\n ------------------------------ \n");
+    if ((middle_colors[buffer_position] == keep_piece[0]) and (middle_colors[piece[buffer_position] - 1] == keep_piece[1])) {
+      piece[buffer_position] = 0;
+      piece[buffer_2nd_position] = 0;
+      buffer_position = keep_pos;
+      loop_time = loop_time - 2;
+    }
+  }
+  if (moves_number_is_even == false) {
+    swap(); 
+    Serial.print("\n Não e par");
+  }
+  Serial.print("fim meios");
+}
+
+void map_corners(){
+  //char corner_colors[] ="gyyrrbgrwggwoooobyybrwwb";
+  char corner_colors[] ="bggboooowyywrrrrwyywgbbg";
+  int loop_time = 24;
+  char keep_piece[3];
+  int keep_pos = 0;
+
+  int piece[24] = {5,14,10,6,1,4,12,19,4,3,16,7,3,2,20,11,2,1,8,15,7,11,15,8};
+  int piece2[24] = {18,17,13,9,18,9,21,24,6,13,22,21,10,17,23,22,14,5,24,23,12,16,20,19};
+
+ 
+  int face_position, face_2nd_position, face_3rd_position;
+  int buffer_position = 2;
+  int buffer_2nd_position, buffer_3rd_position;
+  char buffer_color;
+  int pos1;
+  bool buffer_is_in_place = false;
+
+  while(loop_time > 0){// botar um loop para enquanto o contador de zeros não zerar
+
+    if(piece[buffer_position] == 0){
+      for(int i=0;i<24;i++){
+        if(piece[i] != 0){
+          buffer_position = i;
+          keep_piece[0] = corner_colors[buffer_position];
+          keep_piece[1] = corner_colors[piece[buffer_position]-1];
+          keep_piece[2] = corner_colors[piece2[buffer_position]-1];
+          keep_pos = buffer_position;
+          buffer_is_in_place = true;
+
+          break;
+          }
+        }
+     }
+     
+    buffer_color = corner_colors[buffer_position]; // cor do buffer
+    face_position = find_face(buffer_color); // face em que deveria estar
+    
+    buffer_2nd_position = piece[buffer_position] - 1;   //posição da peça no vetor
+    buffer_color = corner_colors[buffer_2nd_position]; // cor da peça
+    face_2nd_position = find_face(buffer_color);
+    
+    buffer_3rd_position = piece2[buffer_position] - 1;   //posição da peça no vetor
+    buffer_color = corner_colors[buffer_3rd_position]; // cor da peça
+    face_3rd_position = find_face(buffer_color);
+
+    int k = 0;    
+    for(int i=0; i<4; i++){
+      //pos1 = piece[(face_position * 4) + i] - 1;
+      pos1 = (face_position * 4) + i;
+      for(int j =0; j<4; j++){
+        if(piece[pos1]-1 == ((face_2nd_position * 4)+j) or piece2[pos1]-1 == ((face_2nd_position * 4)+j)){
+          for(k=0; k<4; k++){ 
+            if(piece2[pos1]-1 == ((face_3rd_position * 4)+k) or piece[pos1]-1 == ((face_3rd_position * 4)+k)){
+
+              //CHAMA A FUNÇÃO PARA RESOLVER <<<----------
+              if(buffer_position != pos1){
+                if(buffer_is_in_place == true){
+                  Serial.print("\n Ir para pos salva: ");
+                  //Serial.print(keep_pos); //////////////////////////////????????????????????????
+                  //putting_corner_in_place(keep_pos);
+                  buffer_is_in_place = false;
+                }
+                Serial.print("\n Ir para pos1 antes: ");
+                Serial.print(pos1);
+                //putting_corner_in_place(pos1); <<<<<<<<<<<<<<<<<<<<<<
+              }
+              if(piece[buffer_position] != 0){
+                piece[buffer_position] = 0;
+                piece[buffer_2nd_position] = 0;
+                piece[buffer_3rd_position] = 0;
+                piece2[buffer_position] = 0;
+                piece2[buffer_2nd_position] = 0;
+                piece2[buffer_3rd_position] = 0;
+                loop_time = loop_time - 3;
+              }
+              if(loop_time != 0) buffer_position = pos1;
+              i = 4;
+              j = 4;
+              break;
+            }
+          }
+        }else if(i== 3 and (k == 3 or j == 3) and buffer_position != keep_pos){
+            buffer_position = keep_pos;
+            Serial.print("\n Ir para pos keep antes: ");
+            Serial.print(buffer_position);
+           // putting_corner_in_place(buffer_position);   <<<<<<<<<<<<<<<<<<<<;
+          }
+      }
+
+    }// fim for
+    Serial.print("\n ------------------------------ \n");
+    if((corner_colors[buffer_position] == keep_piece[0])and(corner_colors[piece[buffer_position]-1] == keep_piece[1]) and(corner_colors[piece2[buffer_position]-1] == keep_piece[2])){
+      piece[buffer_position] = 0;
+      piece[buffer_2nd_position] = 0;
+      piece[buffer_3rd_position] = 0;
+      buffer_position = keep_pos;
+      loop_time = loop_time - 3;
+      }
+      
+   }
+   
+   Serial.print("fim");
+    
+  }
+
+
+
+/////////////////////////////////////////////////////////// Servo Moves /////////////////////////////////////////////////////////////////
+
+void swap() {
+  R_clockwise();
+  U_clockwise();
+  R_counterClock(1);
+
+  F_counterClock(1);
+
+  R_clockwise();
+  U_clockwise();
+  R_counterClock(1);
+
+  U_counterClock(1);
+  R_counterClock(1);
+  F_clockwise();
+  R_counterClock(2);
+
+  U_counterClock(1);
+  R_counterClock(1);
+  U_counterClock(1);
+
+}
+
+////////////////////////////
+void U_clockwise() {
+  turn_clockwise();
+  R_clockwise();
+  turn_counterClock();
+}
+
+void U_counterClock(int times) {
+  turn_clockwise();
+  R_counterClock(times);
+  turn_counterClock();
+}
+
+void D_clockwise() {
+  turn_clockwise();
+  L_clockwise();
+  turn_counterClock();
+}
+
+void D_counterClock(int times) {
+  turn_clockwise();
+  L_counterClock(times);
+  turn_counterClock();
+}
+
+void E_clockwise(int times) {
+  turn_front_2up();
+  if(times == 1){
+    F_counterClock(1);
+    B_clockwise();
+  }else{
+    F_counterClock(2);
+    B_counterClock(2);
+    turn_clockwise();
+  }
+  turn_clockwise();
+  turn_up_2front();
+}
+
+void E_counterClock(int times) {
+  turn_front_2up();
+  turn_counterClock();
+  if(times == 1){
+    B_counterClock(1);
+    F_clockwise();
+  }else{
+    turn_counterClock();
+    B_counterClock(2);
+    F_counterClock(2);
+    }
+  turn_up_2front();
+}
+
+void Lw_clockwise() {
+  F_counterClock(1);
+  turn_clockwise();
+}
+
+void Lw_counterClock(int times) {
+  turn_counterClock();
+  if(times == 1){
+    F_clockwise();
+  }else{
+    turn_counterClock();
+    F_counterClock(2);
+    }
+}
+
+void S_clockwise() {
+  F_counterClock(1);
+  B_clockwise();
+  turn_clockwise();
+}
+
+void S_counterClock(int times) {
+  if(times == 1){
+    F_clockwise();
+    B_counterClock(1);
+  }else{
+    F_counterClock(2);
+    B_counterClock(2);
+    turn_counterClock();
+    }
+  turn_counterClock();
+}
+
+void turn_up_2front() {
+  servoPos_R.write(posZero);
+  delay(1000);
+  servo_R.write(pos90_claw);
+  delay(1000);
+  servoPos_R.write(approachCube);
+  delay(1000);
+  
+  servoPos_B.write(posZero);
+  servoPos_F.write(posZero);
+  delay(1000);
+
+  servo_L.write(pos90_claw);
+  servo_R.write(posZero);
+  delay(1000);
+
+  servoPos_B.write(approachCube);
+  servoPos_F.write(approachCube);
+  delay(1000);
+
+  servoPos_L.write(posZero);
+  delay(1000);
+  servo_L.write(posZero);
+  delay(1000);
+  servoPos_L.write(approachCube);
+  delay(1000);
+  
+}
+
+void turn_front_2up() {
+  servoPos_L.write(posZero);
+  delay(1000);
+  servo_L.write(pos90_claw);
+  delay(1000);
+  servoPos_L.write(approachCube);
+  delay(1000);
+
+  servoPos_B.write(posZero);
+  servoPos_F.write(posZero);
+  delay(1000);
+
+  servo_R.write(pos90_claw);
+  servo_L.write(posZero);
+  delay(1000);
+
+  servoPos_B.write(approachCube);
+  servoPos_F.write(approachCube);
+  delay(1000);
+
+  servoPos_R.write(posZero);
+  delay(1000);
+  servo_R.write(posZero);
+  delay(1000);
+  servoPos_R.write(approachCube);
+  delay(1000);
+}
+
+void turn_clockwise() {
+  servoPos_B.write(posZero);
+  delay(1000);
+  servo_B.write(pos90_claw);
+  delay(1000);
+  servoPos_B.write(approachCube);
+  delay(1000);
+
+  servoPos_R.write(posZero);
+  servoPos_L.write(posZero);
+  delay(1000);
+
+  servo_F.write(pos90_claw);
+  servo_B.write(posZero);
+  delay(1000);
+
+  servoPos_R.write(approachCube);
+  servoPos_L.write(approachCube);
+  delay(1000);
+
+  servoPos_F.write(posZero);
+  delay(1000);
+  servo_F.write(posZero);
+  delay(1000);
+  servoPos_F.write(approachCube);
+  delay(1000);
+}
+
+void turn_counterClock() {
+  servoPos_F.write(posZero);
+  delay(1000);
+  servo_F.write(pos90_claw);
+  delay(1000);
+  servoPos_F.write(approachCube);
+  delay(1000);
+
+  servoPos_R.write(posZero);
+  servoPos_L.write(posZero);
+  delay(1000);
+
+  servo_B.write(pos90_claw);
+  servo_F.write(posZero);
+  delay(1000);
+
+  servoPos_R.write(approachCube);
+  servoPos_L.write(approachCube);
+  delay(1000);
+
+  servoPos_B.write(posZero);
+  delay(1000);
+  servo_B.write(posZero);
+  delay(1000);
+  servoPos_B.write(approachCube);
+  delay(1000);
+}
+
+void F_clockwise() {
+  servo_F.write(approachCube);
+  delay(1000);
+  servoPos_F.write(posZero);
+  delay(1000);
+  servo_F.write(posZero);
+  delay(1000);
+  servoPos_F.write(approachCube);
+  delay(1000);
+}
+
+void F_counterClock(int times) {
+  int aux;
+  if(times == 1) aux = pos90_claw;
+  else aux = pos180_claw;
+  
+  servoPos_F.write(posZero);
+  delay(1000);
+  servo_F.write(aux);
+  delay(1000);
+  servoPos_F.write(approachCube);
+  delay(1000);
+  servo_F.write(posZero);
+  delay(1000);
+}
+
+void R_clockwise() {
+  servo_R.write(approachCube);
+  delay(1000);
+  servoPos_R.write(posZero);
+  delay(1000);
+  servo_R.write(posZero);
+  delay(1000);
+  servoPos_R.write(approachCube);
+  delay(1000);
+}
+
+void R_counterClock(int times) {
+  int aux;
+  if(times == 1) aux = pos90_claw;
+  else aux = pos180_claw;
+  
+  servoPos_R.write(posZero);
+  delay(1000);
+  servo_R.write(aux);
+  delay(1000);
+  servoPos_R.write(approachCube);
+  delay(1000);
+  servo_R.write(posZero);
+  delay(1000);
+}
+
+void B_clockwise() {
+  servo_B.write(approachCube);
+  delay(1000);
+  servoPos_B.write(posZero);
+  delay(1000);
+  servo_B.write(posZero);
+  delay(1000);
+  servoPos_B.write(approachCube);
+  delay(1000);
+}
+
+void B_counterClock(int times) {
+  int aux;
+  if(times == 1) aux = pos90_claw;
+  else aux = pos180_claw;
+  
+  servoPos_B.write(posZero);
+  delay(1000);
+  servo_B.write(aux);
+  delay(1000);
+  servoPos_B.write(approachCube);
+  delay(1000);
+  servo_B.write(posZero);
+  delay(1000);
+}
+
+void L_clockwise() {
+  servo_L.write(approachCube);
+  delay(1000);
+  servoPos_L.write(posZero);
+  delay(1000);
+  servo_L.write(posZero);
+  delay(1000);
+  servoPos_L.write(approachCube);
+  delay(1000);
+}
+
+void L_counterClock(int times) {
+  int aux;
+  if(times == 1) aux = pos90_claw;
+  else aux = pos180_claw;
+  
+  servoPos_L.write(posZero);
+  delay(1000);
+  servo_L.write(aux);
+  delay(1000);
+  servoPos_L.write(approachCube);
+  delay(1000);
+  servo_L.write(posZero);
+  delay(1000);
+}
+
+void recebe_cubo() {
+
+  /*Posição para receber o cubo
+     servos de posição: frente e esquerda no zero, direita e fundo no 90
+  */
+  servoPos_F.write(posZero);
+  servoPos_L.write(posZero);
+  delay(2000);
+
+  servoPos_B.write(posZero);
+  servoPos_R.write(posZero);
+  delay(2000);
+
+  servoPos_B.write(approachCube);
+  servoPos_R.write(approachCube);
+  delay(4000);
+
+  //segura o cubo
+  servoPos_F.write(approachCube);
+  servoPos_L.write(approachCube);
+  delay(2000);
+}
+
+void solta_cubo() {
+
+  servoPos_F.write(posZero);
+  servoPos_L.write(posZero);
+  delay(2000);
+
+  servoPos_B.write(posZero);
+  servoPos_R.write(posZero);
+  delay(2000);
+
+}
+
+void loop() {
+}
