@@ -811,28 +811,28 @@ void S_counterClock(int times) {
 
 void turn_up_2front() {
   servoPos_R.write(posZero);
-  delay(1000);
+  delay(500);
   servo_R.write(claw_R90);
-  delay(1000);
+  delay(500);
   servoPos_R.write(base_90_R);
-  delay(1000);
+  delay(500);
   
   servoPos_B.write(posZero);
   servoPos_F.write(posZero);
-  delay(1000);
+  delay(500);
 
   servo_L.write(claw_L90);
   servo_R.write(posZero);
-  delay(1000);
+  delay(500);
 
   servoPos_B.write(base_90_FB);
   servoPos_F.write(base_90_FB);
-  delay(1000);
+  delay(500);
 
   servoPos_L.write(posZero);
-  delay(1000);
+  delay(500);
   servo_L.write(posZero);
-  delay(1000);
+  delay(500);
   servoPos_L.write(base_90_L);
   delay(1000);
   
@@ -840,95 +840,96 @@ void turn_up_2front() {
 
 void turn_front_2up() {
   servoPos_L.write(posZero);
-  delay(1000);
+  delay(500);
   servo_L.write(claw_L90);
-  delay(1000);
+  delay(500);
   servoPos_L.write(base_90_L);
-  delay(1000);
+  delay(500);
 
   servoPos_B.write(posZero);
   servoPos_F.write(posZero);
-  delay(1000);
+  delay(500);
 
   servo_R.write(claw_R90);
   servo_L.write(posZero);
-  delay(1000);
+  delay(500);
 
   servoPos_B.write(base_90_FB);
   servoPos_F.write(base_90_FB);
-  delay(1000);
+  delay(500);
 
   servoPos_R.write(posZero);
-  delay(1000);
+  delay(500);
   servo_R.write(posZero);
-  delay(1000);
+  delay(500);
   servoPos_R.write(base_90_R);
   delay(1000);
 }
 
 void turn_clockwise() {
   servoPos_B.write(posZero);
-  delay(1000);
+  delay(500);
   servo_B.write(claw_B90);
-  delay(1000);
+  delay(500);
   servoPos_B.write(base_90_FB);
-  delay(1000);
+  delay(500);
 
   servoPos_R.write(posZero);
   servoPos_L.write(posZero);
-  delay(1000);
+  delay(500);
 
   servo_F.write(claw_F90);
   servo_B.write(posZero);
-  delay(1000);
+  delay(500);
 
   servoPos_R.write(base_90_R);
   servoPos_L.write(base_90_L);
-  delay(1000);
+  delay(500);
 
   servoPos_F.write(posZero);
-  delay(1000);
+  delay(500);
   servo_F.write(posZero);
-  delay(1000);
+  delay(500);
   servoPos_F.write(base_90_FB);
   delay(1000);
 }
 
 void turn_counterClock() {
   servoPos_F.write(posZero);
-  delay(1000);
+  delay(500);
   servo_F.write(claw_F90);
-  delay(1000);
+  delay(500);
   servoPos_F.write(base_90_FB);
-  delay(1000);
+  delay(500);
 
   servoPos_R.write(posZero);
   servoPos_L.write(posZero);
-  delay(1000);
+  delay(500);
 
   servo_B.write(claw_B90);
   servo_F.write(posZero);
-  delay(1000);
+  delay(500);
 
   servoPos_R.write(base_90_R);
   servoPos_L.write(base_90_L);
-  delay(1000);
+  delay(500);
 
   servoPos_B.write(posZero);
-  delay(1000);
+  delay(500);
   servo_B.write(posZero);
-  delay(1000);
+  delay(500);
   servoPos_B.write(base_90_FB);
   delay(1000);
 }
 
+
 void F_clockwise() {
   servo_F.write(claw_F90);
-  delay(1000);
+  delay(500);
   servoPos_F.write(posZero);
-  delay(1000);
+  delay(500);
   servo_F.write(posZero);
-  delay(1000);
+  delay(500);
   servoPos_F.write(base_90_FB);
   delay(1000);
 }
@@ -939,22 +940,22 @@ void F_counterClock(int times) {
   else aux = claw_F180;
   
   servoPos_F.write(posZero);
-  delay(1000);
+  delay(500);
   servo_F.write(aux);
-  delay(1000);
+  delay(500);
   servoPos_F.write(base_90_FB);
-  delay(1000);
+  delay(500);
   servo_F.write(posZero);
   delay(1000);
 }
 
 void B_clockwise() {
   servo_B.write(claw_B90);
-  delay(1000);
+  delay(500);
   servoPos_B.write(posZero);
-  delay(1000);
+  delay(500);
   servo_B.write(posZero);
-  delay(1000);
+  delay(500);
   servoPos_B.write(base_90_FB);
   delay(1000);
 }
@@ -965,22 +966,22 @@ void B_counterClock(int times) {
   else aux = claw_B180;
   
   servoPos_B.write(posZero);
-  delay(1000);
+  delay(500);
   servo_B.write(aux);
-  delay(1000);
+  delay(500);
   servoPos_B.write(base_90_FB);
-  delay(1000);
+  delay(500);
   servo_B.write(posZero);
   delay(1000);
 }
 
 void L_clockwise() {
   servo_L.write(claw_L90);
-  delay(1000);
+  delay(500);
   servoPos_L.write(posZero);
-  delay(1000);
+  delay(500);
   servo_L.write(posZero);
-  delay(1000);
+  delay(500);
   servoPos_L.write(base_90_L);
   delay(1000);
 }
@@ -991,22 +992,22 @@ void L_counterClock(int times) {
   else aux = claw_L180;
   
   servoPos_L.write(posZero);
-  delay(1000);
+  delay(500);
   servo_L.write(aux);
-  delay(1000);
+  delay(500);
   servoPos_L.write(base_90_L);
-  delay(1000);
+  delay(500);
   servo_L.write(posZero);
   delay(1000);
 }
 
 void R_clockwise() {
   servo_R.write(claw_R90);
-  delay(1000);
+  delay(500);
   servoPos_R.write(posZero);
-  delay(1000);
+  delay(500);
   servo_R.write(posZero);
-  delay(1000);
+  delay(500);
   servoPos_R.write(base_90_R);
   delay(1000);
 }
@@ -1017,13 +1018,14 @@ void R_counterClock(int times) {
   else aux = claw_R180;
   
   servoPos_R.write(posZero);
-  delay(1000);
+  delay(500);
   servo_R.write(aux);
-  delay(1000);
+  delay(500);
   servoPos_R.write(base_90_R);
-  delay(1000);
+  delay(500);
   servo_R.write(posZero);
   delay(1000);
+
 }
 
 void recebe_cubo() {
@@ -1048,7 +1050,6 @@ void recebe_cubo() {
   servoPos_L.write(base_90_L);
   delay(2000);
 }
-
 void solta_cubo() {
 
   servoPos_F.write(posZero);
