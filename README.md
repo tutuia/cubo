@@ -7,4 +7,5 @@
 </p>
 <h4 align="center"> 
 	Em construção..
+	Arquivo atual: cube solving v7.2 - faster
 </h4>
