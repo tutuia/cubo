@@ -1,6 +1,6 @@
 #include <Servo.h>
-char faces_color[6];
-char middle_colors[24], corner_colors[24];  
+//char faces_color[6];
+//char middle_colors[24], corner_colors[24];  
 
 // servos para manipulação do cubo
 Servo servo_F;
@@ -41,7 +41,7 @@ void setup() {
   servo_R.write(0);
 
   recebe_cubo();
-  
+  /*
   Serial.write("\n ##############################################################################"); 
   Serial.write("\n Informe as iniciais dos nomes em inglês das cores: ");
   Serial.write("\n exemplo: informe w se a cor for branca");  
@@ -99,7 +99,7 @@ void setup() {
           turn_up_2front();
           }else turn_counterClock();       
     }
-
+*/
   map_colors();
   map_corners();
   solta_cubo();
@@ -108,7 +108,7 @@ void setup() {
 ///////////////////////////////////////////////////// Movements planning //////////////////////////////////////////////////////////////////////////
 
 int find_face(char color) {
-  //char faces_color[] = "wogrby";
+  char faces_color[] = "wogrby";
   int i;
 
   for (i = 0; i < 6; i++) {
@@ -492,7 +492,7 @@ void putting_corner_in_place(int whereTo) {
 }
 
 void map_colors() {
-  //char middle_colors[] = "wgwboooogygwrrrrbybwybyg";
+  char middle_colors[] = "wrgwoooowgggwrrrbbbbyyyy";
   //char middle_colors[] = "gyrrbwbwwgbboyoorggrywyo"; <<< erro
   int loop_time = 24;
   char keep_piece[2];
@@ -542,19 +542,20 @@ void map_colors() {
             buffer_is_inverted = true;
             /////////////////////////////////////////////////////////////////////////////////////
               }
-          else if (buffer_position != pos1) {
+          if (buffer_position != pos1) {
             if (buffer_is_in_place == true) {
-              if(buffer_is_inverted == true) keep_pos = keep_2nd;
+              int receive_position = keep_pos;
+              if(buffer_is_inverted == true) receive_position = keep_2nd;
               buffer_is_inverted = false;
               Serial.print("\n Ir para pos salva: ");
-              Serial.print(keep_pos);
-              putting_middle_in_place(keep_pos); //<<<<<<<<<<<<<<<<<<<
+              Serial.print(receive_position);
+              //putting_middle_in_place(keep_pos); //<<<<<<<<<<<<<<<<<<<
               buffer_is_in_place = false;
               moves_number_is_even = !moves_number_is_even;
             }
             Serial.print("\n Ir para pos1 antes: ");
             Serial.print(pos1);
-            putting_middle_in_place(pos1); // <<<<<<<<<<<<<<<<<<<<<<<
+            //putting_middle_in_place(pos1); // <<<<<<<<<<<<<<<<<<<<<<<
             moves_number_is_even = !moves_number_is_even;
           }
           if (piece[buffer_position] != 0) {
@@ -572,7 +573,7 @@ void map_colors() {
           buffer_position = keep_pos;
           Serial.print("\n Ir para pos keep antes: ");
           Serial.print(buffer_position);
-          putting_middle_in_place(buffer_position);   // <<<<<<<<<<<<<<<<<<<<
+          //putting_middle_in_place(buffer_position);   // <<<<<<<<<<<<<<<<<<<<
           moves_number_is_even = !moves_number_is_even;
         }
       }
