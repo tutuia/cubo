@@ -1,0 +1,123 @@
+int find_position_middle(int face_1, int face_2){
+  int piece[24] = {17, 13, 9, 5, 4, 12, 24, 18, 3, 16, 21, 6, 2, 20, 22, 10, 1, 8, 23, 14, 11, 15, 19, 7};
+  int pos2[4];
+  int pos1;
+
+  for(int i=0;i<4;i++){
+    pos2[i] = (face_2 * 4)+i;
+    }
+  for(int i=0;i<4;i++){
+    pos1 = (face_1 * 4)+i;
+    int second = piece[pos1] - 1;
+    if((second == pos2[0])||(second == pos2[1])||(second == pos2[2])||(second == pos2[3])){
+      break;
+      }
+    }
+  return pos1;
+  }
+
+void middle_map(){
+      
+    int piece[24] = {17, 13, 9, 5, 4, 12, 24, 18, 3, 16, 21, 6, 2, 20, 22, 10, 1, 8, 23, 14, 11, 15, 19, 7};
+    int loop_time = 24;
+    int buffer_position = 2;
+    
+    int analizando = 2;
+    int analizando_2nd_position = piece[analizando]-1; 
+    int face_position, face_2nd_position;
+    int right_pos;
+    char analizando_color;
+    
+    int inverted_pieces[2];
+    bool buffer_is_inverted = false;
+    
+    char keep_buffer_colors[2];
+    int keep_pos;
+    bool moves_number_is_even = true;
+
+    while(loop_time > 0){
+        analizando_color = middle_colors[analizando];
+        face_position = find_face(analizando_color);
+        analizando_color = middle_colors[analizando_2nd_position];
+        face_2nd_position = find_face(analizando_color);
+
+        right_pos = find_position_middle(face_position, face_2nd_position);
+
+        if(right_pos == analizando){
+            //peça no lugar certo
+            //como retirar do buffer?
+          
+          }else if(right_pos == analizando_2nd_position){
+              //peça invertida
+              if(analizando == buffer_position){
+                  buffer_is_inverted = true; 
+                  //como retirar do buffer?
+                }else{
+                  if(buffer_is_inverted == false){
+                      buffer_is_inverted = true;
+                      inverted_pieces[0] = analizando;
+                      inverted_pieces[1] = analizando_2nd_position;
+                       
+                    }else{
+                        Serial.print("\n Mandando buffer: ");
+                        Serial.print(analizando);
+                        //putting_middle_in_place(analizando);//<<<<<<<<<<
+                        moves_number_is_even = !moves_number_is_even;
+                        Serial.print("\n Desinverte, mandar para: ");
+                        Serial.print(inverted_pieces[1]);
+                        //putting_middle_in_place(inverted_pieces[1]);//<<<<<<<<<<
+                        moves_number_is_even = !moves_number_is_even;
+                        Serial.print("\n Mandar de volta para: ");
+                        Serial.print(inverted_pieces[0]);
+                        //putting_middle_in_place(inverted_pieces[0]);//<<<<<<<<<<
+                        moves_number_is_even = !moves_number_is_even;     
+                        Serial.print("\n Devolvendo buffer: ");
+                        Serial.print(analizando);
+                        //putting_middle_in_place(analizando);//<<<<<<<<<<
+                        moves_number_is_even = !moves_number_is_even;
+                        buffer_is_inverted = false;
+
+                        piece[inverted_pieces[0]] = 0;
+                        piece[inverted_pieces[1]] = 0;
+                        piece[analizando] = 0;
+                        piece[analizando_2nd_position] = 0;
+                        loop_time = loop_time - 4;
+                        
+                      }
+                  
+                  }
+              
+          }else{
+              //peça fora do lugar
+              if(analizando == buffer_position){
+                  Serial.print("\n Enviando para posicao correta: ");
+                  Serial.print(right_pos);
+                  //putting_middle_in_place(right_pos);//<<<<<<<<<<
+                  moves_number_is_even = !moves_number_is_even;
+                  analizando = 
+                  
+                }else if(){
+                    //se cores da peça igual cores do buffer
+                  
+                  }else{
+                      Serial.print("\n Mandando buffer: ");
+                      Serial.print(analizando);
+                      //putting_middle_in_place(analizando);//<<<<<<<<<<
+                      moves_number_is_even = !moves_number_is_even;
+                      Serial.print("\n Mandando para lugar certo: ");
+                      Serial.print(right_pos);
+                      //putting_middle_in_place(right_pos);//<<<<<<<<<<
+                      moves_number_is_even = !moves_number_is_even;
+                    
+                  }
+            
+            }
+      }
+    
+
+  
+  
+  
+  
+  
+  }
