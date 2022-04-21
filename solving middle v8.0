@@ -868,17 +868,17 @@ void E_counterClock(int times) {
 }
 
 void Lw_clockwise() {
-  F_counterClock(1);
-  turn_clockwise();
+  R_clockwise();
+  turn_up_2front();
 }
 
 void Lw_counterClock(int times) {
-  turn_counterClock();
+  turn_front_2up();
   if(times == 1){
-    F_clockwise();
+    R_counterClock(1);
   }else{
-    turn_counterClock();
-    F_counterClock(2);
+    turn_front_2up();
+    R_counterClock(1);
     }
 }
 
