@@ -22,7 +22,7 @@ void middle_map(){
     int loop_time = 24;
     int buffer_position = 2;
     
-    int analizando = 2;
+    int analizando = buffer_position;
     int analizando_2nd_position = piece[analizando]-1; 
     int face_position, face_2nd_position;
     int right_pos;
@@ -34,8 +34,27 @@ void middle_map(){
     char keep_buffer_colors[2];
     int keep_pos;
     bool moves_number_is_even = true;
+    int controle = 0;
 
     while(loop_time > 0){
+      
+        analizando = buffer_position;// será?
+        
+        if (piece[buffer_position] == 0) {
+              for (int i = controle; i < 24; i++) {
+                if (piece[i] != 0) {
+                  analizando = i;
+                  keep_piece[0] = middle_colors[buffer_position];
+                  keep_piece[1] = middle_colors[piece[buffer_position] - 1];
+                  keep_pos = buffer_position;
+                  controle = i;
+                  break;
+                }
+              }
+        }
+        
+        analizando_2nd_position = piece[analizando]-1; 
+        
         analizando_color = middle_colors[analizando];
         face_position = find_face(analizando_color);
         analizando_color = middle_colors[analizando_2nd_position];
@@ -44,14 +63,14 @@ void middle_map(){
         right_pos = find_position_middle(face_position, face_2nd_position);
 
         if(right_pos == analizando){
-            //peça no lugar certo
-            //como retirar do buffer?
+            //peça no lugar certo e não necessariamente no buffer
+            Serial.print("\n peça no lugar certo. ");
           
           }else if(right_pos == analizando_2nd_position){
               //peça invertida
               if(analizando == buffer_position){
                   buffer_is_inverted = true; 
-                  //como retirar do buffer?
+                  //como salvar posição ao retirar do buffer?
                 }else{
                   if(buffer_is_inverted == false){
                       buffer_is_inverted = true;
@@ -94,12 +113,17 @@ void middle_map(){
                   Serial.print(right_pos);
                   //putting_middle_in_place(right_pos);//<<<<<<<<<<
                   moves_number_is_even = !moves_number_is_even;
-                  analizando = 
+                  
+                  piece[analizando] = 0;
+                  piece[analizando_2nd_position] = 0;
+                  loop_time = loop_time - 2;
+                  buffer_position = right_pos;
                   
                 }else if(){
-                    //se cores da peça igual cores do buffer
+                    //se cores da peça igual cores do buffer salvo
                   
                   }else{
+                      //salvar buffer aintigo?
                       Serial.print("\n Mandando buffer: ");
                       Serial.print(analizando);
                       //putting_middle_in_place(analizando);//<<<<<<<<<<
@@ -108,10 +132,17 @@ void middle_map(){
                       Serial.print(right_pos);
                       //putting_middle_in_place(right_pos);//<<<<<<<<<<
                       moves_number_is_even = !moves_number_is_even;
+                      
+                      piece[analizando] = 0;
+                      piece[analizando_2nd_position] = 0;
+                      loop_time = loop_time - 2;
+                      buffer_position = right_pos;
                     
                   }
             
             }
+
+            
       }
     
 
