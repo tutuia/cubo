@@ -7,5 +7,5 @@
 </p>
 <h4 align="center"> 
 	Em construção..
-	Versão atual: <a href="https://github.com/tutuia/cubo/blob/main/cube%20solving%20v7.2%20-%20faster">cube solving v7.2 - faster</a>
+	Versão atual: <a href="https://github.com/tutuia/cubo/blob/main/cube%20solving%20v8.0">cube solving v8.0 </a>
 </h4>
