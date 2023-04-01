@@ -1,9 +1,18 @@
 #include <Servo.h>
-char faces_color[6];
-char middle_colors[24], corner_colors[24];  
+#include <Wire.h>
+#include <ArduinoNvs.h>
+#include <Arduino.h>
+
+#define S1 32
+#define S2 33
+#define S3 25
+
+char faces_color[7];
+char middle_colors[25];
+char corner_colors[25];  
 
 //char faces_color[] = "yobrgw";
-//char middle_colors[] = "ryyyoooybbbbrwrrggggwwow"; 
+//char middle_colors[] = "ryyyoooybbbbrwrrggggwwow";
 //char corner_colors[]="rryyyooybbbbrwwrggggwwoo";  
 
 // servos para manipulação do cubo
@@ -19,33 +28,233 @@ Servo servoPos_B;
 Servo servoPos_L;
 
 const int posZero = 0;
-const int base_90_FB = 95;
-const int base_90_L = 83;
-const int base_90_R = 95;
-const int claw_F90 = 80;
-const int claw_F180 = 170;
-const int claw_B90 = 80;
-const int claw_B180 = 170;
-const int claw_L90 = 80;
-const int claw_L180 = 172;
-const int claw_R90 = 85;
-const int claw_R180 = 175;
+const int base_90_FB = 41;
+const int base_90_L = 42;
+const int base_90_R = 30;
+int claw_F90 = 80;
+int claw_F180 = 170;
+int claw_B90 = 80;
+int claw_B180 = 170;
+int claw_L90 = 80;
+int claw_L180 = 172;
+int claw_R90 = 70;  
+int claw_R180 = 180;  
 
 void setup() {
 
-  delay(2000);
-  Serial.begin(9600);
-  Serial.print("oi");
+  memset(faces_color, 0, sizeof(faces_color));
+  memset(middle_colors, 0, sizeof(middle_colors));
+  memset(corner_colors, 0, sizeof(corner_colors));
 
-  servoPos_F.attach(8);
-  servoPos_R.attach(9);
-  servoPos_B.attach(10);
-  servoPos_L.attach(11);
+  ArduinoNvs mynvs;
 
-  servo_F.attach(2);
-  servo_R.attach(3);
-  servo_B.attach(4);
-  servo_L.attach(5);
+  servoPos_F.attach(19);
+  servoPos_R.attach(18);
+  servoPos_B.attach(5);
+  servoPos_L.attach(17);
+
+  servo_F.attach(16);
+  servo_R.attach(4);
+  servo_B.attach(2);
+  servo_L.attach(15);
+
+  mynvs.begin("customNs");
+
+  pinMode(S1, OUTPUT);
+  pinMode(S2, OUTPUT);
+  pinMode(S3, OUTPUT);
+
+  delay(200);
+  Serial.begin(115200);
+  Serial.print("\r\nstarting....");
+
+  Wire.begin(21, 22);  
+  Wire1.begin(14, 27);
+
+// Teste de movimento das garras
+//#define TEST
+#ifdef TEST 
+  while(1){
+    if(Serial.available() > 0){
+      char c1;
+        c = Serial.read();
+        Serial.write(c);
+
+      switch(c1){
+        case '0':
+          F_clockwise();
+        break;
+
+        case '1':
+          L_clockwise();
+        break;
+
+        case '2':
+          R_clockwise();
+        break;
+
+        case '3':
+          B_clockwise();
+        break;
+      }
+    }
+  }      
+
+#endif
+
+  while (!Serial);             
+  Serial.println("\nI2C Scanner");
+
+  for (int i = 0; i < 8; i++){
+    mux(i);
+    i2c_scanner(0);
+  }
+
+  i2c_scanner(1);
+
+  claw_F90 = mynvs.getInt("F90");
+  Serial.printf("F90: %i\n", claw_F90);
+
+  claw_R90 = mynvs.getInt("R90");
+  Serial.printf("R90: %i\n", claw_R90);
+
+  claw_B90 = mynvs.getInt("B90");
+  Serial.printf("B90: %i\n", claw_B90);
+
+  claw_L90 = mynvs.getInt("L90");
+  Serial.printf("L90: %i\n", claw_L90);
+// 180
+
+  claw_F180 = mynvs.getInt("F180");
+  Serial.printf("F180: %i\n", claw_F180);
+
+  claw_R180 = mynvs.getInt("R180");
+  Serial.printf("R180: %i\n", claw_R180);
+
+  claw_B180 = mynvs.getInt("B180");
+  Serial.printf("B180: %i\n", claw_B180);
+
+  claw_L180 = mynvs.getInt("L180");
+  Serial.printf("L180: %i\n", claw_L180);
+
+  Serial.print("\r\nwaiting... deseja calibrar servos? (S) ");
+
+  char calibre[1];
+  Serial.setTimeout(10000);
+  Serial.readBytesUntil('\n', calibre, 1);
+
+  if(calibre[0] == 'S'){
+    Serial.print("calibrando...");
+
+    int x = 0;
+    char n[10];
+
+    while(x != -1){
+        Serial.print("<F> entre com um valor próximo a 90\n");
+        Serial.readBytesUntil('\n', n, 9);
+        x = atoi(n);
+        Serial.printf("valor digitado: %i\n", x);
+        if(x != -1){
+          mynvs.setInt("F90", x);
+          servo_F.write(x);
+          claw_F90 = x;
+        }
+    }
+    servo_F.write(0);
+    x = 0;
+    while(x != -1){
+        Serial.print("<R> entre com um valor próximo a 90\n");
+        Serial.readBytesUntil('\n', n, 9);
+        x = atoi(n);
+        Serial.printf("valor digitado: %i\n", x);
+        if(x != -1){
+          mynvs.setInt("R90", x);
+          servo_R.write(x);
+          claw_R90 = x;
+        }
+    }
+    servo_R.write(0);
+    x = 0;
+    while(x != -1){
+        Serial.print("<B> entre com um valor próximo a 90\n");
+        Serial.readBytesUntil('\n', n, 9);
+        x = atoi(n);
+        Serial.printf("valor digitado: %i\n", x);
+        if(x != -1){
+          mynvs.setInt("B90", x);
+          servo_B.write(x);
+          claw_B90 = x;
+        }
+    } 
+    servo_B.write(0);
+    x = 0;
+    while(x != -1){
+        Serial.print("<L> entre com um valor próximo a 90\n");
+        Serial.readBytesUntil('\n', n, 9);
+        x = atoi(n);
+        Serial.printf("valor digitado: %i\n", x);
+        if(x != -1){
+          mynvs.setInt("L90", x);
+          servo_L.write(x);
+          claw_L90 = x;
+        }
+    } 
+    servo_L.write(0);
+    // Verificando ângulos de 180 graus
+    x = 0;
+
+        while(x != -1){
+        Serial.print("<F> entre com um valor próximo a 180\n");
+        Serial.readBytesUntil('\n', n, 9);
+        x = atoi(n);
+        Serial.printf("valor digitado: %i\n", x);
+        if(x != -1){
+          mynvs.setInt("F180", x);
+          servo_F.write(x);
+          claw_F180 = x;
+        }
+    }
+    servo_F.write(0);
+    x = 0;
+    while(x != -1){
+        Serial.print("<R> entre com um valor próximo a 180\n");
+        Serial.readBytesUntil('\n', n, 9);
+        x = atoi(n);
+        Serial.printf("valor digitado: %i\n", x);
+        if(x != -1){
+          mynvs.setInt("R180", x);
+          servo_R.write(x);
+          claw_R180 = x;
+        }
+    }
+    servo_R.write(0);
+    x = 0;
+    while(x != -1){
+        Serial.print("<B> entre com um valor próximo a 180\n");
+        Serial.readBytesUntil('\n', n, 9);
+        x = atoi(n);
+        Serial.printf("valor digitado: %i\n", x);
+        if(x != -1){
+          mynvs.setInt("B180", x);
+          servo_B.write(x);
+          claw_B180 = x;
+        } 
+    } 
+    servo_B.write(0);
+    x = 0;
+    while(x != -1){
+        Serial.print("<L> entre com um valor próximo a 180\n");
+        Serial.readBytesUntil('\n', n, 9);
+        x = atoi(n);
+        Serial.printf("valor digitado: %i\n", x);
+        if(x != -1){
+          mynvs.setInt("L180", x);
+          servo_L.write(x);
+          claw_L180 = x;
+        }   
+    } 
+    servo_L.write(0); 
+}
 
   servo_F.write(0);
   servo_L.write(0);
@@ -53,35 +262,39 @@ void setup() {
   servo_R.write(0);
 
   recebe_cubo();
-  
-  Serial.write("\n ##############################################################################"); 
+ 
+  Serial.write("\n ##############################################################################");
   Serial.write("\n Informe as iniciais dos nomes em inglês das cores: ");
   Serial.write("\n exemplo: informe w se a cor for branca");  
-  Serial.write("\n na seguninte ordem 012345678 percorrendo a face em sentido horário onde:"); 
-  Serial.write("\n 0 | 1 | 2"); 
-  Serial.write("\n ----------"); 
+  Serial.write("\n na seguinte ordem 012345678 percorrendo a face em sentido horário onde:");
+  Serial.write("\n 0 | 1 | 2");
+  Serial.write("\n ----------");
   Serial.write("\n 7 | 8 | 3");
   Serial.write("\n ----------");  
-  Serial.write("\n 6 | 5 | 4"); 
+  Serial.write("\n 6 | 5 | 4");
 
-  Serial.write("\n\n EXEMPLO: se"); 
-  Serial.write("\n b | y | o"); 
-  Serial.write("\n ----------"); 
+  Serial.write("\n\n EXEMPLO: se");
+  Serial.write("\n b | y | o");
+  Serial.write("\n ----------");
   Serial.write("\n r | r | y");
   Serial.write("\n ----------");  
-  Serial.write("\n o | w | g"); 
-  Serial.write("\n\n INFORMAR: byoygworr"); 
-  Serial.write("\n ##############################################################################"); 
-  
+  Serial.write("\n o | w | g");
+  Serial.write("\n\n INFORMAR: byoygworr");
+  Serial.write("\n ##############################################################################");
+ 
   char c;
   int i = 0;
   while(i<6){
     int j = 0;
     int aux_mid = 0;
     int aux_corner = 0;
+    Serial.printf("\n\n Face %i\n",i+1);
+
     while(j<9){
-      if(Serial.available() > 0){ 
+      if(Serial.available() > 0){
         c = Serial.read();
+        Serial.write(c);
+
         if(c != '\n'){
           if(j==8){
             faces_color[i] = c;
@@ -94,11 +307,22 @@ void setup() {
                 middle_colors[(4*i)+aux_mid] = c;
                 aux_mid++;
                 j++;
-                } 
-          }   
+                }
+          }  
         }
       }
+      
     i++;
+
+  Serial.write("\n\n Cores das quinas:");
+  Serial.printf(corner_colors);
+
+  Serial.write("\n\n Cores do meio:");
+  Serial.printf(middle_colors);
+
+  Serial.write("\n\n Cores das faces:");
+  Serial.printf(faces_color);
+
     if(i == 1){
       turn_front_2up();
       turn_clockwise();
@@ -109,15 +333,99 @@ void setup() {
         }else if(i == 6){
           turn_up_2front();
           turn_up_2front();
-          }else turn_counterClock();       
+          }else turn_counterClock();      
     }
 
+
+  Serial.write("\n\n Cores das quinas:");
+  Serial.printf(corner_colors);
+  Serial.write("\n\n Cores do meio:");
+  Serial.printf(middle_colors);
+  Serial.write("\n\n Cores das faces:");
+  Serial.printf(faces_color);
+
+  Serial.println(sizeof(middle_colors));
+  Serial.println(sizeof(corner_colors));
+
+  Serial.write("\n Iniciando solucao.....");
+  delay(2000);
   map_middle();
+  solta_cubo();
+  return;
+  
   map_corners();
   solta_cubo();
+
+  Serial.write("\n\n Cores das quinas:");
+  Serial.printf(corner_colors);
+
+  Serial.write("\n\n Cores do meio:");
+  Serial.printf(middle_colors);
+
+  Serial.write("\n\n Cores das faces:");
+  Serial.printf(faces_color);
 }
 
+void mux(int ch){
+
+  int s1, s2, s3;
+  s1 = ch & 1;
+  s2 = (ch & 2) >> 1; 
+  s3 = (ch & 4) >> 2;
+
+  digitalWrite(S1, s1);
+  digitalWrite(S2, s2);
+  digitalWrite(S3, s3);
+}
+
+
 ///////////////////////////////////////////////////// Setups  //////////////////////////////////////////////////////////////////////////
+void i2c_scanner(int ch){
+  {
+  byte error, address;
+  int nDevices;
+  char s[100];
+  sprintf(s, "Scanning... %d", ch);
+  Serial.println(s);
+  nDevices = 0;
+  for(address = 1; address < 127; address++ )
+  {
+    // The i2c_scanner uses the return value of
+    // the Write.endTransmisstion to see if
+    // a device did acknowledge to the address.
+    if (ch == 0){
+Wire.beginTransmission(address);
+    error = Wire.endTransmission();
+    }
+    else{
+      Wire1.beginTransmission(address);
+    error = Wire1.endTransmission();
+    }
+    
+    if (error == 0)
+    {
+      Serial.print("I2C device found at address 0x");
+      if (address<16)
+         Serial.print("0");
+      Serial.print(address,HEX);
+      Serial.println("  !");
+      nDevices++;
+     }
+     else if (error==4)
+     {
+      Serial.print("Unknown error at address 0x");
+      if (address<16)
+         Serial.print("0");
+      Serial.println(address,HEX);
+     }    
+    }
+    if (nDevices == 0)
+       Serial.println("No I2C devices found\n");
+    else
+       Serial.println("done\n");
+    delay(500);           // wait 5 seconds for next scan
+}
+}
 
 void putting_middle_in_place(int whereTo) {
   Serial.print("\n Ir para: ");
@@ -461,7 +769,7 @@ void putting_corner_in_place(int whereTo) {
 
     }
     else if (whereTo == 12) {
-     //BUFFER 
+     //BUFFER
     }
     else if (whereTo == 13) {
       B_counterClock(2);
@@ -524,13 +832,13 @@ int find_position_middle(int face_1, int face_2){
   }
 
 void map_middle(){
-      
+     
     int piece[24] = {17, 13, 9, 5, 4, 12, 24, 18, 3, 16, 21, 6, 2, 20, 22, 10, 1, 8, 23, 14, 11, 15, 19, 7};
     int loop_time = 24;
     int buffer_position = 2;
-    
+   
     int analizando = buffer_position;
-    int analizando_2nd_position = piece[analizando]-1; 
+    int analizando_2nd_position = piece[analizando]-1;
     int face_position, face_2nd_position;
     int right_pos;
     char analizando_color;
@@ -539,10 +847,10 @@ void map_middle(){
     int controle = 0;
 
     while(loop_time > 0){
-      
+     
         analizando = buffer_position;// será?
 
-        
+       
         if (piece[buffer_position] == 0) {
               for (int i = controle; i < 24; i++) {
                 if (piece[i] != 0){
@@ -552,9 +860,9 @@ void map_middle(){
                 }
               }
         }
-        
-        analizando_2nd_position = piece[analizando]-1; 
-        
+       
+        analizando_2nd_position = piece[analizando]-1;
+       
         analizando_color = middle_colors[analizando];
         face_position = find_face(analizando_color);
         analizando_color = middle_colors[analizando_2nd_position];
@@ -568,7 +876,7 @@ void map_middle(){
               piece[analizando] = 0;
               piece[analizando_2nd_position] = 0;
               loop_time = loop_time - 2;
-          
+         
           }else if(right_pos == analizando_2nd_position){
               //peça invertida
               if(analizando != buffer_position){
@@ -585,7 +893,7 @@ void map_middle(){
                   loop_time = loop_time - 2;
              
                   }
-              
+             
           }else{
               //peça fora do lugar
               if(analizando == buffer_position){
@@ -593,12 +901,12 @@ void map_middle(){
                   Serial.print(right_pos);
                   putting_middle_in_place(right_pos);//<<<<<<<<<<
                   if(right_pos != 2 && right_pos != 8) moves_number_is_even = !moves_number_is_even;
-                  
+                 
                   piece[analizando] = 0;
                   piece[analizando_2nd_position] = 0;
                   loop_time = loop_time - 2;
                   buffer_position = right_pos;
-                  
+                 
                 }else{
                       //salvar buffer aintigo?
                       Serial.print("\n Mandando buffer: ");
@@ -609,7 +917,7 @@ void map_middle(){
                       Serial.print(right_pos);
                       putting_middle_in_place(right_pos);//<<<<<<<<<<
                       if(right_pos != 2 && right_pos != 8) moves_number_is_even = !moves_number_is_even;
-                      
+                     
                       piece[analizando] = 0;
                       piece[analizando_2nd_position] = 0;
                       loop_time = loop_time - 2;
@@ -621,16 +929,16 @@ void map_middle(){
     }
   if (moves_number_is_even == false) {
     Serial.print("\n Não e par");
-    swap(); 
+    swap();
   }
   Serial.print("fim meios");
 }
 
 int find_position_corner(int face_1, int face_2, int face_3){
-  
+ 
   int piece[24] = {5,14,10,6,1,4,12,19,4,3,16,7,3,2,20,11,2,1,8,15,7,11,15,8};
   int piece2[24] = {18,17,13,9,18,9,21,24,6,13,22,21,10,17,23,22,14,5,24,23,12,16,20,19};
-  
+ 
   int pos2[4];
   int pos3[4];
   int pos1, retorno;
@@ -639,7 +947,7 @@ int find_position_corner(int face_1, int face_2, int face_3){
     pos2[i] = (face_2 * 4)+i;
     pos3[i] = (face_3 * 4)+i;
     }
-    
+   
   for(int i=0;i<4;i++){
     pos1 = (face_1 * 4)+i;
     int second = piece[pos1] - 1;
@@ -661,15 +969,15 @@ int find_position_corner(int face_1, int face_2, int face_3){
   }
 
 void map_corners(){
-      
+     
     int piece[24] = {5,14,10,6,1,4,12,19,4,3,16,7,3,2,20,11,2,1,8,15,7,11,15,8};
     int piece2[24] = {18,17,13,9,18,9,21,24,6,13,22,21,10,17,23,22,14,5,24,23,12,16,20,19};
     int loop_time = 24;
     int buffer_position = 2;
-    
+   
     int analizando = buffer_position;
-    int analizando_2nd_position = piece[analizando]-1; 
-    int analizando_3rd_position = piece2[analizando]-1; 
+    int analizando_2nd_position = piece[analizando]-1;
+    int analizando_3rd_position = piece2[analizando]-1;
     int face_position, face_2nd_position, face_3rd_position;
     int right_pos;
     char analizando_color;
@@ -677,10 +985,10 @@ void map_corners(){
     int controle = 0;
 
     while(loop_time > 0){
-      
+     
         analizando = buffer_position;// será?
 
-        
+       
         if (piece[buffer_position] == 0) {
               for (int i = controle; i < 24; i++) {
                 if (piece[i] != 0){
@@ -690,10 +998,10 @@ void map_corners(){
                 }
               }
         }
-        
-        analizando_2nd_position = piece[analizando]-1; 
-        analizando_3rd_position = piece2[analizando]-1; 
-        
+       
+        analizando_2nd_position = piece[analizando]-1;
+        analizando_3rd_position = piece2[analizando]-1;
+       
         analizando_color = corner_colors[analizando];
         face_position = find_face(analizando_color);
         analizando_color = corner_colors[analizando_2nd_position];
@@ -710,10 +1018,10 @@ void map_corners(){
               piece[analizando_2nd_position] = 0;
               piece[analizando_3rd_position] = 0;
               loop_time = loop_time - 3;
-          
+         
           }else if(right_pos == analizando_2nd_position||right_pos == analizando_3rd_position){
               //peça invertida
-              if(analizando != buffer_position){ 
+              if(analizando != buffer_position){
                   Serial.print("\n Mandando buffer: ");
                   Serial.print(analizando);
                   putting_corner_in_place(analizando);//<<<<<<<<<<
@@ -726,7 +1034,7 @@ void map_corners(){
                   loop_time = loop_time - 3;
              
                   }
-              
+             
           }else{
               //peça fora do lugar
               if(analizando == buffer_position){
@@ -738,7 +1046,7 @@ void map_corners(){
                   piece[analizando_3rd_position] = 0;
                   loop_time = loop_time - 3;
                   buffer_position = right_pos;
-                  
+                 
                 }else{
                       //salvar buffer aintigo?
                       Serial.print("\n Mandando buffer: ");
@@ -747,7 +1055,7 @@ void map_corners(){
                       Serial.print("\n Mandando para lugar certo: ");
                       Serial.print(right_pos);
                       putting_corner_in_place(right_pos);//<<<<<<<<<<
-                      
+                     
                       piece[analizando] = 0;
                       piece[analizando_2nd_position] = 0;
                       piece[analizando_3rd_position] = 0;
@@ -762,7 +1070,6 @@ void map_corners(){
 
   Serial.print("fim");
 }
-
 
 /////////////////////////////////////////////////////////// Servo Moves /////////////////////////////////////////////////////////////////
 
@@ -881,7 +1188,7 @@ void turn_up_2front() {
   delay(500);
   servoPos_R.write(base_90_R);
   delay(500);
-  
+ 
   servoPos_B.write(posZero);
   servoPos_F.write(posZero);
   delay(500);
@@ -900,7 +1207,7 @@ void turn_up_2front() {
   delay(500);
   servoPos_L.write(base_90_L);
   delay(600);
-  
+ 
 }
 
 void turn_front_2up() {
@@ -987,7 +1294,6 @@ void turn_counterClock() {
   delay(600);
 }
 
-
 void F_clockwise() {
   servo_F.write(claw_F90);
   delay(500);
@@ -1003,7 +1309,7 @@ void F_counterClock(int times) {
   int aux;
   if(times == 1) aux = claw_F90;
   else aux = claw_F180;
-  
+ 
   servoPos_F.write(posZero);
   delay(500);
   servo_F.write(aux);
@@ -1029,7 +1335,7 @@ void B_counterClock(int times) {
   int aux;
   if(times == 1) aux = claw_B90;
   else aux = claw_B180;
-  
+ 
   servoPos_B.write(posZero);
   delay(500);
   servo_B.write(aux);
@@ -1055,7 +1361,7 @@ void L_counterClock(int times) {
   int aux;
   if(times == 1) aux = claw_L90;
   else aux = claw_L180;
-  
+ 
   servoPos_L.write(posZero);
   delay(500);
   servo_L.write(aux);
@@ -1081,7 +1387,7 @@ void R_counterClock(int times) {
   int aux;
   if(times == 1) aux = claw_R90;
   else aux = claw_R180;
-  
+ 
   servoPos_R.write(posZero);
   delay(500);
   servo_R.write(aux);
@@ -1115,6 +1421,7 @@ void recebe_cubo() {
   servoPos_L.write(base_90_L);
   delay(2000);
 }
+
 void solta_cubo() {
 
   servoPos_F.write(posZero);
